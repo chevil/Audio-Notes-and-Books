@@ -26,18 +26,24 @@ to process audio within the browser.
 
 * create the database :
 > cd sql
+
 > mysqladmin create wavesurfer
 
 * change the admin password in wavesurfer.sql
+
 > mysql wavesurfer < wavesurfer.sql
 
 * edit config.php and change these lines according
 to your mysql configuration :
 
 $config['dbname'] = "wavesurfer";
+
 $config['dbhost'] = "__host__";
+
 $config['dbuser'] = "__dbuser__";
+
 $config['dbpass'] = "__dbpass__";
+
 $config['owner'] = "admin";
 
 You're set, log in to the system as admin
