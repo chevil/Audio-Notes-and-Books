@@ -1,0 +1,61 @@
+.sfull {
+  float: right;
+  margin-right: 20px;
+  width: 20px;
+  height: 20px;
+}
+
+.speaker {
+  margin-top: 5px;
+  margin-left: 20px;
+  height: 20px;
+  width: 340px;
+  font-size: 16px;
+}
+
+.ispeaker {
+  float: left;
+  height: 20px;
+  width: 300px;
+  padding-left: 20px;
+  font-size: 16px;
+}
+
+.speech {
+  width: 360px;
+  height: 120px;
+  padding: 0px;
+}
+
+.ispeech {
+  position: relative;
+  margin-left: 0px;
+  margin-bottom: 0px;
+  padding-left: 20px;
+  padding-top: 5px;
+  width: 360px;
+  height: 100px;
+  text-align: left;
+  line-height: 16px;
+  font-size: 14px;
+  background-color: #fff;
+  border: 2px solid #666;
+  -webkit-border-radius: 30px;
+  -moz-border-radius: 30px;
+  border-radius: 30px;
+  -webkit-box-shadow: 2px 2px 4px #888;
+  -moz-box-shadow: 2px 2px 4px #888;
+  box-shadow: 2px 2px 4px #888;
+  overflow: hidden;
+}
+
+.speech-cursor {
+  content: ' ';
+  position: relative;
+  width: 0;
+  height: 0;
+  left: 30px;
+  top: 0px;
+  border: 10px solid;
+  border-color: #666 transparent transparent #666;
+}

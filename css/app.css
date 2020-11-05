@@ -1,0 +1,163 @@
+region.wavesurfer-region:before {
+  content: attr(data-region-label);
+}
+
+region.wavesurfer-region[data-region-highlight] {
+  border: 1px solid rgb(86, 180, 239);
+  box-shadow: 0px 1px 3px rgba(0, 0, 0, 0.05) inset, 0px 0px 8px rgba(82, 168, 236, 0.6);
+}
+
+.btn-export {
+  min-width:160px;
+  width:160px;
+} 
+
+.btn-fplay {
+}
+
+.btn-play {
+  min-width:80px;
+  width:80px;
+} 
+
+.modal-dialog {
+  background:#ffffff;
+  border-radius:6px;
+  height:550px;
+}
+
+.modal-bdialog {
+  height:350px;
+}
+
+.modal-hdialog {
+  height:280px;
+  padding-top:10px;
+}
+
+.modal-fdialog {
+  background:#ffffff;
+  border-radius:6px;
+  padding-top:10px;
+  height:545px;
+}
+
+.modal-content {
+  padding:20px;
+  margin:10px;
+  height:500px;
+  width:560px;
+}
+
+.modal-bcontent {
+  padding:30px;
+  margin:20px;
+  height:300px;
+  margin-top:-10px;
+}
+
+.modal-hcontent {
+  padding:30px;
+  height:250px;
+  overflow-y: auto;
+  margin:auto;
+}
+
+.modal-fcontent {
+  height:520px;
+  padding:20px;
+  margin:auto;
+}
+
+#help {
+  float:left;
+  margin-left:5px;
+  margin-top:-15px;
+}
+
+#minus,#plus {
+  float:right;
+  margin-left:5px;
+  margin-top:200px;
+  z-index:123;
+}
+
+#audiobook-div {
+  max-width:40px;
+  width:32px;
+  display:block;
+  padding-left:568px;
+}
+
+.alertify-alert {
+  border-width:2px;
+}
+
+.alertify-confirm {
+  border-width:2px;
+}
+
+.zoom-value {
+  position:relative;
+  float:right;
+  width:50px;
+  height:20px;
+  font-size:16px;
+  text-align:left;
+  line-height:20px;
+  margin-right:200px;
+  padding-top:220px;
+  margin-left:10px;
+  margin-top:-15px;
+  z-index:15;
+}
+
+wave {
+  width: 100%;
+  scrollbar-width: auto;
+  scrollbar-color: blue orange;
+}
+
+wave::-webkit-scrollbar {
+  width: 20px;
+}
+
+wave::-webkit-scrollbar-track {
+  background: orange;
+}
+
+wave::-webkit-scrollbar-thumb {
+  background-color: blue;
+  border-radius: 20px;
+  border: 3px solid orange;
+}
+
+#waveform {
+  margin-bottom: 20px;
+}
+
+#wave-minimap {
+  padding-top: 20px;
+  height: 60px;
+  width: 100%;
+}
+
+table th, table td{
+  padding: 5px;
+}
+
+.ellipsis {
+  white-space: nowrap;
+  overflow: hidden;
+}
+
+li {
+  width:100%;
+  white-space:nowrap;
+}
+
+.rightcorner {
+  position: absolute;
+  left: 500px;
+  z-index: 10;
+}

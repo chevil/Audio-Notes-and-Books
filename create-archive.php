@@ -1,0 +1,66 @@
+<?php
+
+include("config.php");
+include("functions.php");
+
+session_start();
+
+if ( !isset($_SESSION['schtroumpf']) || !isset($_SESSION['papa']) )
+{
+    header( "Location: ./index.php" );
+    exit();
+}
+
+  $servroot = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" : "http") . "://$_SERVER[HTTP_HOST]:$_SERVER[HTTP_PORT]";
+  
+  if ( empty($_GET['file']) )
+  {
+     print "ERR: File is not set";
+     exit(-1);
+  }
+--no-check-certificate  $file=$_GET['file'];
+
+  if ( empty($_GET['user']) )
+  {
+     print "ERR: User is not set";
+     exit(-1);
+  }
+  $user=$_GET['user'];
+
+  error_log("Wave Surfer : Calling : ./create-archive.sh '".urldecode($file)."'");
+  if ( strstr( $result=exec("./create-archive.sh '".urldecode($file)."'"), "ERR:" ) )
+  {
+     print( $result );
+     exit(-1);
+  }
+  else
+  {
+     error_log($result);
+     $infos=explode('√',$result);
+
+     // saving in the new archive in the database
+     $link = mysqli_connect($config['dbhost'], $config['dbuser'], $config['dbpass'], $config['dbname']);
+     if (!$link) {
+        print( "ERR: Couldn't connect to the database : ".$config['dbname']);
+        exit(-1);
+     } else {
+        $link->query("SET NAMES utf8");
+        $sql = "SELECT id FROM archive WHERE url='".urldecode($file)."';";
+        // error_log($sql);
+        $result = $link->query($sql);
+        if ( $result && mysqli_num_rows($result) === 0) {
+           $isql = "INSERT INTO archive ( uri, url, author, title, collection, date, creator ) VALUES ( '".addslashes($infos[0])."','".addslashes($file)."','".addslashes($infos[1])."','".addslashes($infos[2])."','".addslashes($infos[3])."','".addslashes($infos[4])."','".addslashes($_SESSION['schtroumpf'])."' )";
+           $insert = $link->query($isql);
+           if ( $insert !== true ) {
+              error_log( "ERROR : ".__FILE__." : could not create archive : ".$file." : ".mysqli_error($link) );
+              mysqli_close($link);
+              print( "ERR: Couldn't create archive : ".$file);
+              exit(-1);
+           }
+        }
+     }
+     error_log( "Wave Surfer : Redirecting to : ".$infos[0] );
+     print( $servroot.dirname($_SERVER['SCRIPT_NAME'])."/".$infos[0] );
+  }
+
+?>
