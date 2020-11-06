@@ -34,8 +34,7 @@ CREATE TABLE `annotation` (
   `title` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin,
   `user` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin,
   `color` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin,
-  PRIMARY KEY (`id`),
-  UNIQUE KEY `norderk` (`norder`)
+  PRIMARY KEY (`id`)
 ) ENGINE=MyISAM AUTO_INCREMENT=71 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -81,8 +80,7 @@ CREATE TABLE `audiobook` (
   `norder` bigint NOT NULL DEFAULT '-1',
   `excerpt` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin,
   `user` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL,
-  PRIMARY KEY (`id`),
-  UNIQUE KEY `norderk` (`norder`)
+  PRIMARY KEY (`id`)
 ) ENGINE=MyISAM AUTO_INCREMENT=69 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
