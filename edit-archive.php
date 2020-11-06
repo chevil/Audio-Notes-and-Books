@@ -28,11 +28,11 @@ else
    else
    {
       $row = mysqli_fetch_row( $result );
-      $author = $row[0];
-      $title = $row[1];
-      $collection = $row[2];
+      $author = htmlentities($row[0],ENT_QUOTES);
+      $title = htmlentities($row[1],ENT_QUOTES);
+      $collection = htmlentities($row[2],ENT_QUOTES);
       $date = $row[3];
-      $creator = $row[4];
+      $creator = htmlentities($row[4],ENT_QUOTES);
    }
 }
 
