@@ -1,4 +1,4 @@
-P.a.N.a.B. is a collaborative audio annotation tool
+A.N.a.B. is a collaborative audio annotation tool
 that can be used for different purposes :
 transcription, translation, comments on music, story telling, ...
 
