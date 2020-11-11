@@ -8,14 +8,15 @@
 .speaker {
   margin-top: 5px;
   margin-left: 20px;
-  height: 20px;
+  bottom: 20px;
+  height: 25px;
   width: 340px;
   font-size: 16px;
 }
 
 .ispeaker {
   float: left;
-  height: 20px;
+  height: 25px;
   width: 300px;
   padding-left: 20px;
   font-size: 16px;
@@ -56,6 +57,7 @@
   height: 0;
   left: 30px;
   top: 0px;
+  margin-top: 10px;
   border: 10px solid;
   border-color: #666 transparent transparent #666;
 }

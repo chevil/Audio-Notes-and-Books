@@ -23,6 +23,7 @@ if ( !isset($_SESSION['schtroumpf']) || !isset($_SESSION['papa']) )
         <link rel="stylesheet" href="../../css/alertify.default.css" />
         <link rel="stylesheet" href="../../css/app.css" />
         <link rel="stylesheet" href="../../css/speech.css" />
+        <link rel="stylesheet" href="../../css/spinner.css" />
 
         <script type="text/javascript" src="../../js/jquery.min.js"></script>
         <script type="text/javascript" src="../../js/bootstrap.min.js"></script> 
@@ -89,6 +90,9 @@ if ( !isset($_SESSION['schtroumpf']) || !isset($_SESSION['papa']) )
                   <div class="modal-dialog modal-bdialog">
                     <center><h3>Audiobook</h3></center>
                     <div class="modal-content modal-bcontent">
+                      <center>
+                         <div class="lds-spinner"><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div></div>
+                      </center>
                       <form role="form" id="addbook" name="addbook" style="transition: opacity 300ms linear; margin: 30px 0;">
                          <div class="form-group">
                              <label for="oldbook">Add To Existing Book</label>
@@ -143,6 +147,7 @@ if ( !isset($_SESSION['schtroumpf']) || !isset($_SESSION['papa']) )
                     </div>
                 </div>
             </div>
+
     </body>
 
 <script type="text/javascript" >

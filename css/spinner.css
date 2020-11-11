@@ -1,10 +1,11 @@
 .lds-spinner {
   color: #675643;
-  display: inline-block;
+  display: none;
   position: relative;
   margin: auto;
   width: 80px;
   height: 80px;
+  z-index: 100;
 }
 .lds-spinner div {
   transform-origin: 40px 40px;

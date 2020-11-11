@@ -82,6 +82,7 @@ var moveSpeech = function() {
  * Init & load.
  */
 document.addEventListener('DOMContentLoaded', function() {
+
     // Init wavesurfer
     wavesurfer = WaveSurfer.create({
         container: '#waveform',
@@ -277,19 +278,24 @@ document.addEventListener('DOMContentLoaded', function() {
               alertify.alert( "Please, choose an existing book or create a new one!" );
               return;
            }
+           $('.lds-spinner').css('display','block');
            var jqxhr = $.post( {
               url: 'add-to-book.php',
               data: {
                 oldbook: encodeURIComponent(oldbook),
                 newbook: encodeURIComponent(newbook),
                 order: order,
+                user: user,
                 source: encodeURIComponent(soundfile),
               },
               dataType: 'application/json'
            }, function() {
               console.log( "add to book succeeded" );
+              $('.lds-spinner').css('display','none');
+              $("#modal-book").modal("hide");
            })
            .fail(function(error) {
+               $('.lds-spinner').css('display','none');
                $("#modal-book").modal("hide");
                if ( error.status === 200 ) {
                   console.log( "add to book success");
@@ -328,6 +334,8 @@ document.addEventListener('DOMContentLoaded', function() {
         help: { title: 'Help', items: 'help' }
       }
     });
+
+    $('.lds-spinner').css('display','none');
 });
 
 /**
