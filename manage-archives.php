@@ -72,7 +72,6 @@ else
       .pages { float: left; margin-left: 10%; width: 80%; overflow-wrap: break-word; }
       .search { float: left; margin-left: 20%;}
       .add { float: right; margin-right: 10%; width: 10%; }
-      .license { float: left; margin-left: 10%;}
   </style>
 
   <link href="css/alertify.core.css" rel="stylesheet">
@@ -152,7 +151,7 @@ $page=0;
 print "Pages : ";
 while ( $page < $nbpages )
 {
-   print "<a href='manage-archives.php?start=".($page*$size)."&search=".$search."&licensed=".$licensed."' >".($page+1)."</a>&nbsp;";
+   print "<a href='manage-archives.php?start=".($page*$size)."&search=".$search."' >".($page+1)."</a>&nbsp;";
    if ( $page%30 == 29 )
    {
       // print "<br/>";
