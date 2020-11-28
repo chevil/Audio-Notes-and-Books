@@ -239,7 +239,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
        $("#modal-book").on("shown.bs.modal", function() {
            var jqxhr = $.post( {
-             url: 'get-audiobooks.php',
+             url: '../../get-audiobooks.php',
            }, function(data) {
               console.log( "got audiobooks : " + JSON.stringify(data));
               var books = JSON.parse(data);
@@ -282,7 +282,7 @@ document.addEventListener('DOMContentLoaded', function() {
            }
            $('.lds-spinner').css('display','block');
            var jqxhr = $.post( {
-              url: 'add-to-book.php',
+              url: '../../add-to-book.php',
               data: {
                 oldbook: encodeURIComponent(oldbook),
                 newbook: encodeURIComponent(newbook),
@@ -370,7 +370,7 @@ function saveRegions() {
     // console.log( "saving : " + counter + " annotations" );
 
     var jqxhr = $.post( {
-      url: 'save-annotations.php',
+      url: '../../save-annotations.php',
       data: {
 	'json': localStorage.regions
       },
@@ -607,7 +607,7 @@ window.GLOBAL_ACTIONS['delete-region'] = function() {
         form.reset();
 
         var jqxhr = $.post( {
-          url: 'delete-annotation.php',
+          url: '../../delete-annotation.php',
           data: {
             order: order ,
             source: encodeURIComponent(soundfile)
