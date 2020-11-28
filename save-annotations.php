@@ -1,6 +1,6 @@
 <?php
 
-include("../../config.php");
+include("config.php");
 
   if ( empty($_POST['json']) )
   {

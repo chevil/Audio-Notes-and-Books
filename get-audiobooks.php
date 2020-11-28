@@ -1,6 +1,6 @@
 <?php
 
-include("../../config.php");
+include("config.php");
 
   $link = mysqli_connect($config['dbhost'], $config['dbuser'], $config['dbpass'], $config['dbname']);
   if (!$link) {
