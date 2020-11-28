@@ -61,12 +61,10 @@ var incZoom = function() {
 
 var moveSpeech = function() {
     var curx, curxx;
+    if ( wzoom == 0 ) wzoom=1;
     if ( wzoom > 0 ) {
        curx=wavesurfer.getCurrentTime()*wzoom-1;
        curxx=(wavesurfer.getDuration()-wavesurfer.getCurrentTime())*wzoom+1;
-    } else {
-       curx=(wavesurfer.getCurrentTime()*$("#waveform").width()/wavesurfer.getDuration())-1;
-       curxx=((wavesurfer.getDuration()-wavesurfer.getCurrentTime())*$("#waveform").width()/wavesurfer.getDuration())+1;
     }
     if ( curxx + $("#waveform").width()/2 <= $("#waveform").width() ) {
        $(".speech-cursor").css('left', ($("#waveform").width()-curxx)+'px' );

@@ -23,6 +23,7 @@ include("../../config.php");
      exit(-1);
   } else {
      $link->query("SET NAMES utf8");
+     $link->query("LOCK TABLES");
      $annotes = json_decode( $annotations, true );
      // error_log( __FILE__." got : ".count($annotes)." notes" );
      foreach( $annotes as $note )
@@ -43,6 +44,7 @@ include("../../config.php");
            if ( $insert !== true ) {
               error_log( "ERROR : ".__FILE__." : could not create annotation : ".$note["order"]." : ".mysqli_error($link) );
               header('HTTP/1.1 500 Error creating annotation');	  
+              $link->query("UNLOCK TABLES");
               mysqli_close($link);
               exit(-1);
            }
@@ -52,12 +54,14 @@ include("../../config.php");
            if ( $update !== true ) {
               error_log( "ERROR : ".__FILE__." : could not update annotation : ".$note["order"]." : ".mysqli_error($link) );
               header('HTTP/1.1 500 Error updating annotation');	  
+              $link->query("UNLOCK TABLES");
               mysqli_close($link);
               exit(-1);
            }
          } else {
            error_log( "ERROR : ".__FILE__." : found ".mysqli_num_rows($result)." annotations with order ".$note["order"] );
            header('HTTP/1.1 500 Multiple annotation found');	  
+           $link->query("UNLOCK TABLES");
            mysqli_close($link);
            exit(-1);
          }
@@ -65,6 +69,7 @@ include("../../config.php");
   }
 
   header('HTTP/1.1 200 OK');	  
+  $link->query("UNLOCK TABLES");
   mysqli_close($link);
   exit(0);
 
