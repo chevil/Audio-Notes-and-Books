@@ -167,7 +167,7 @@ while ( $page < $nbpages )
 <?php
 
 $count = $start+1;
-print "<th align=left>Author</th><th align=left>Title</th><th align=left>Collection</th><th align=left>Date</th><th align=left>Creator</th><th align=center>Edit</th><th align=center>Delete</th><th align=center>Annotations</th>";
+print "<th align=left>Author</th><th align=left>Title</th><th align=left>Genre / Collection</th><th align=left>Date</th><th align=left>Creator</th><th align=center>Edit</th><th align=center>Delete</th><th align=center>Annotations</th>";
 while ( $rowuser = mysqli_fetch_row( $respageusers) )
 {
    print "<tr><td align=left>".$rowuser[3]."</td>";

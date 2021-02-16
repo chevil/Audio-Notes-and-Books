@@ -112,7 +112,7 @@ else
   print "<tr><td colspan=2><input type='hidden' id='aid' name='aid' value='".$id."' /></td></tr>";
   print "<tr><td width=50% align=right>Author : </td><td><input type='text' id='author' name='author' value='".$author."' /></td></tr>";
   print "<tr><td width=50% align=right>Title : </td><td><input type='text' id='title' name='title' value='".$title."' /></td></tr>";
-  print "<tr><td width=50% align=right>Collection : </td><td><input type='text' id='collection' name='collection' value='".$collection."' /></td></tr>";
+  print "<tr><td width=50% align=right>Genre / Collection : </td><td><input type='text' id='collection' name='collection' value='".$collection."' /></td></tr>";
   print "<tr><td width=50% align=right>Date : </td><td><input type='text' id='date' name='date' value='".$date."' /></td></tr>";
 
 ?>
