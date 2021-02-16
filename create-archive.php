@@ -18,7 +18,7 @@ if ( !isset($_SESSION['schtroumpf']) || !isset($_SESSION['papa']) )
      print "ERR: File is not set";
      exit(-1);
   }
---no-check-certificate  $file=$_GET['file'];
+  $file=$_GET['file'];
 
   if ( empty($_GET['user']) )
   {
