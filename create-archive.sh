@@ -48,6 +48,9 @@ then
 else
    sartist='Unknown'
    dirname=`echo $1 | rev | cut -d'/' -f 1 | rev | sed 's/.mp3//g' - | sed 's/.ogg//g' - | sed 's/.wav//g' - | sed 's/.webm//g' - | sed 's/.aiff//g' -`
+   nbfiles=`ls -1d archives/* | wc -l`
+   nbfiles=$((nbfiles+1))
+   dirname="archive-$nbfiles"
 fi
 
 echo "New directory : $dirname"
