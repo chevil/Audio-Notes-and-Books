@@ -20,7 +20,7 @@ else
 }
 
 $dtitle = preg_replace('/ /','-',urldecode($title));
-$dtitle = preg_replace("/[^A-Za-z0-9]/", '', $dtitle);
+$dtitle = preg_replace("/[^A-Za-z0-9éèàçêôûù]/", '', $dtitle);
 if ( ( $result=exec("rm -rf 'audiobooks/".$dtitle."'; echo $?") ) != 0 )
 {
    error_log("ERR: Could not erase directory.");

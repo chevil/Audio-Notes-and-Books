@@ -76,7 +76,7 @@ include("config.php");
      }
      // generate the audio file
      $duration = $end - $start;
-     $cmd = "cd ../..;./create-excerpt.sh ".$start." ".$duration." '".urldecode($source)."' '".$excerpt."' 2>/dev/null";
+     $cmd = "./create-excerpt.sh ".$start." ".$duration." '".urldecode($source)."' '".$excerpt."' 2>/dev/null";
      error_log($cmd);
      if ( strstr( $result=exec($cmd), "ERR:" ) )
      {

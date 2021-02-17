@@ -370,7 +370,7 @@ function saveRegions() {
     // console.log( "saving : " + counter + " annotations" );
 
     var jqxhr = $.post( {
-      url: '../../save-annotations.php',
+      url: 'save-annotations.php',
       data: {
 	'json': localStorage.regions
       },
