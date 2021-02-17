@@ -326,6 +326,7 @@ document.addEventListener('DOMContentLoaded', function() {
       statusbar: false,
       placeholder: 'Type here...',
       contextmenu: 'link image',
+      entity_encoding : 'raw',
       menu: {
         file: { title: '', items: '' },
         edit: { title: 'Edit', items: 'undo redo | cut copy paste | selectall | searchreplace' },
