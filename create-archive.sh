@@ -6,7 +6,7 @@ if [ $# -ne 1 ]; then
 fi
 
 tmpfile=`tempfile`
-echo -n "Downloading to $tmpfile..." 1>&2
+echo -n "Downloading to $tmpfile ..." 1>&2
 wget -O $tmpfile --no-check-certificate "$1" 2>/dev/null
 if [ $? -ne 0 ]
 then
@@ -17,15 +17,15 @@ then
 fi
 echo "done." 1>&2
 
-artist=`/usr/bin/ffprobe $tmpfile 2>&1 | grep -iw -m1 artist | cut -f2 -d':' | xargs | sed 's/ //g' -`
+artist=`/usr/bin/ffprobe $tmpfile 2>&1 | grep -iw -m1 artist | cut -f2 -d':' | sed 's/ //g' -`
 sartist=`/usr/bin/ffprobe $tmpfile 2>&1 | grep -iw -m1 artist | cut -f2 -d':'`
 echo "artist : $artist" 1>&2
 date=`/usr/bin/ffprobe $tmpfile 2>&1 | grep -iw -m1 date | cut -f2 -d':' | xargs | sed 's/ //g' - | sed 's/\//-/g' -`
 echo "date : $date" 1>&2
-title=`/usr/bin/ffprobe $tmpfile 2>&1 | grep -iw -m1 title | cut -f2-3 -d':' | sed 's/:/<br>/g' - | xargs`
-dtitle=`/usr/bin/ffprobe $tmpfile 2>&1 | grep -iw -m1 title | cut -f2 -d':' | xargs | sed 's/ /-/g' - | sed 's/--/-/g' -`
+title=`/usr/bin/ffprobe $tmpfile 2>&1 | grep -iw -m1 title | cut -f2-3 -d':' | sed 's/:/<br>/g'`
+dtitle=`/usr/bin/ffprobe $tmpfile 2>&1 | grep -iw -m1 title | cut -f2 -d':' | awk '{print $1 " " $2 " " $3 " " $4 " " $5}' | sed 's/ /-/g' | sed 's/--/-/g'`
 echo "title : $title" 1>&2
-collection=`/usr/bin/ffprobe $tmpfile 2>&1 | grep -iw -m1 album | grep -v replaygain | cut -f2 -d':'`
+collection=`/usr/bin/ffprobe $tmpfile 2>&1 | grep -iw -m1 album | grep -v replaygain | cut -f2 -d':' | awk '{print $1 $2 $3}'`
 echo "collection : $collection" 1>&2
 
 if [ "x"$dtitle == "x" ]
@@ -52,6 +52,7 @@ else
    nbfiles=$((nbfiles+1))
    dirname="archive-$nbfiles"
 fi
+
 
 echo "New directory : $dirname"
 if [ -d "archives/$dirname" ]
@@ -83,4 +84,4 @@ sed -i "s#__title__#$title#g" "archives/$dirname/index.php"
 
 echo "archives/$dirname/index.php√$sartist√$title√$collection√$sdate"
 
-/bin/rm $tmpfile
+#/bin/rm $tmpfile
