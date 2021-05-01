@@ -14,7 +14,7 @@ if ( !isset($_SESSION['schtroumpf']) || !isset($_SESSION['papa']) )
 <html>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-        <title>wavesurfer.js | Annotation tool</title>
+        <title>__title__</title>
 
         <!-- Bootstrap -->
         <link rel="stylesheet" href="../../css/bootstrap.min.css">
@@ -45,16 +45,13 @@ if ( !isset($_SESSION['schtroumpf']) || !isset($_SESSION['papa']) )
     <body>
     <a href="../../index.php"><img src="../../img/back.png" style="float:left; margin-left:20px; margin-top:-15px;" width=30px height=30px /></a>
     <img id="help" src="../../img/help.png" style="float:left; margin-left:10px;" width=30px height=30px>
-    <div id="zvalue" class="zoom-value"></div>
-    <img id="plus" src="../../img/plus.png" width=20px height=20px />
-    <img id="minus" src="../../img/minus.png" width=20px height=20px />
 
         <div class="container">
             <div class="header">
                 <h3 itemprop="title" id="title">Title : __title__ (__date__)</h3>
             </div>
 
-            <div id="demo">
+            <div id="demo" class="outer-wave">
 		<div id="subtitle" class="speech">
 		    <div id="isubtitle" class="ispeech"></div>
                     <div id="speaker" class="speaker">
@@ -62,7 +59,12 @@ if ( !isset($_SESSION['schtroumpf']) || !isset($_SESSION['papa']) )
                     <div id="sfull" class="sfull" data-action="pause"><img src="../../img/fullscreen.png" width="20px" height="20px" /></div>
                     </div>
                 </div>
-		<div id="cursor" class="speech-cursor">&nbsp;</div>
+		<div id="toolbar" class="upper-toolbar">
+		    <div id="cursor" class="speech-cursor">&nbsp;</div>
+                    <div id="zvalue" class="zoom-value"></div>
+                    <img id="plus" src="../../img/plus.png" width=20px height=20px />
+                    <img id="minus" src="../../img/minus.png" width=20px height=20px />
+                </div>
                 <div id="waveform"></div>
                 <div id="wave-timeline"></div>
                 <div id="wave-minimap"></div>
@@ -147,7 +149,10 @@ if ( !isset($_SESSION['schtroumpf']) || !isset($_SESSION['papa']) )
                     </div>
                 </div>
             </div>
-
+            <div id="notes" class="outer-notes">
+                I'm here
+            </div>
+        </div>
     </body>
 
 <script type="text/javascript" >

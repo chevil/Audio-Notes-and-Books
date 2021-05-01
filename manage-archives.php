@@ -177,7 +177,7 @@ while ( $rowuser = mysqli_fetch_row( $respageusers) )
    print "<td align=left>".$rowuser[7]."</td>";
    print "<td align=center><a href='javascript:editArchive(".$rowuser[0].");'><img src='img/edit.png' width=20px height=20px /></a></td>";
    print "<td align=center><a href='javascript:deleteArchive(".$rowuser[0].");'><img src='img/delete.png' width=20px height=20px /></a></td>";
-   print "<td align=center><a href='".$rowuser[1]."'><img src='img/see.png' width=20px height=20px /></a></td>";
+   print "<td align=center><a href='".htmlentities($rowuser[1], ENT_QUOTES)."'><img src='img/see.png' width=20px height=20px /></a></td>";
    print "</tr>";
    $count++;
 }

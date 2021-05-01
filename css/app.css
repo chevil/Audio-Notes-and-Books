@@ -1,4 +1,4 @@
-region.wavesurfer-region:before {
+egion.wavesurfer-region:before {
   content: attr(data-region-label);
 }
 
@@ -78,8 +78,7 @@ region.wavesurfer-region[data-region-highlight] {
 #minus,#plus {
   float:right;
   margin-left:5px;
-  margin-top:200px;
-  z-index:123;
+  margin-top:0px;
 }
 
 #audiobook-div {
@@ -98,18 +97,15 @@ region.wavesurfer-region[data-region-highlight] {
 }
 
 .zoom-value {
-  position:relative;
   float:right;
   width:50px;
   height:20px;
   font-size:16px;
   text-align:left;
   line-height:20px;
-  margin-right:200px;
-  padding-top:220px;
+  margin-right:0px;
   margin-left:10px;
-  margin-top:-15px;
-  z-index:15;
+  margin-top:0px;
 }
 
 wave {

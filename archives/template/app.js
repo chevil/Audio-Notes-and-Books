@@ -7,6 +7,21 @@ var evid;
 var currentRegion;
 var soundfile = '__file_url__';
 
+var fullEncode = function(w)
+{
+ var map=
+ {
+          '&': '%26',
+          '<': '%3c',
+          '>': '%3e',
+          '"': '%22',
+          "'": '%27'
+ };
+
+ var encodedW = encodeURI(w);
+ return encodedW.replace(/[&<>"']/g, function(m) { return map[m];});
+}
+
 var getPosition = function(e)
 {
    var x = 0;
@@ -284,11 +299,11 @@ document.addEventListener('DOMContentLoaded', function() {
            var jqxhr = $.post( {
               url: '../../add-to-book.php',
               data: {
-                oldbook: encodeURIComponent(oldbook),
-                newbook: encodeURIComponent(newbook),
+                oldbook: fullEncode(oldbook),
+                newbook: fullEncode(newbook),
                 order: order,
                 user: user,
-                source: encodeURIComponent(soundfile),
+                source: fullEncode(soundfile),
               },
               dataType: 'application/json'
            }, function() {
@@ -359,10 +374,10 @@ function saveRegions() {
                 order: counter,
                 start: region.start,
                 end: region.end,
-                baseurl: encodeURIComponent(burl),
-                source: encodeURIComponent(soundfile),
-                title: encodeURIComponent(document.querySelector('#title').innerHTML.toString().substr(8)),
-                url: encodeURIComponent(burl+'?start='+region.start),
+                baseurl: fullEncode(burl),
+                source: fullEncode(soundfile),
+                title: fullEncode(document.querySelector('#title').innerHTML.toString().substr(8)),
+                url: fullEncode(burl+'?start='+region.start),
                 attributes: region.attributes,
                 data: region.data
             };
@@ -611,7 +626,7 @@ window.GLOBAL_ACTIONS['delete-region'] = function() {
           url: '../../delete-annotation.php',
           data: {
             order: order ,
-            source: encodeURIComponent(soundfile)
+            source: fullEncode(soundfile)
           },
           dataType: 'application/json'
         }, function() {

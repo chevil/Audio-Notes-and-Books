@@ -42,7 +42,9 @@ if ( !isset($_SESSION['schtroumpf']) || !isset($_SESSION['papa']) )
           return;
        }
        $('.lds-spinner').css('opacity','1.0');
+       $('#create').prop('disabled', true);
        $.get( "create-archive.php", { file : encodeURIComponent(url), user : '<?php echo $_SESSION['schtroumpf']; ?>' }, function(data) {
+        $('.lds-spinner').css('opacity','0.0');
         if ( data.indexOf("ERR:")>=0 )
         {
           $('#error-zone').css({background:'red'});
@@ -64,6 +66,10 @@ if ( !isset($_SESSION['schtroumpf']) || !isset($_SESSION['papa']) )
     function back() {
        document.location='index.php';
     }
+
+    $(document).ready( function(){
+      $('.lds-spinner').css('opacity','0.0');
+    });
 
   </script>
 
@@ -91,7 +97,7 @@ print "
 </td></tr>
 <tr><td colspan=2 align=center>
 <br/><br/>
-<input type='submit' class='bluebutton' value='Create' />
+<input type='submit' id='create' class='bluebutton' value='Create' />
 </td></tr>
 <tr><td align=center colspan=2>
 <div id='error-zone'>Error text</div>
@@ -102,13 +108,6 @@ print "
 ?>
 
 <center><div class="lds-spinner"><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div></div></center>
-
-
-<script type="text/javascript">
-$(document).ready( function(){
-  $('.lds-spinner').css('opacity','0.0');
-});
-</script>
 
 </body>
 </html>
