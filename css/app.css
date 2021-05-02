@@ -7,6 +7,11 @@ region.wavesurfer-region[data-region-highlight] {
   box-shadow: 0px 1px 3px rgba(0, 0, 0, 0.05) inset, 0px 0px 8px rgba(82, 168, 236, 0.6);
 }
 
+.media-button {
+  margin-left: 50px;
+  margin-right: 50px;
+}
+
 .btn-export {
   min-width:160px;
   width:160px;

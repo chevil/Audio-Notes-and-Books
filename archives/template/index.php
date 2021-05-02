@@ -24,6 +24,7 @@ if ( !isset($_SESSION['schtroumpf']) || !isset($_SESSION['papa']) )
         <link rel="stylesheet" href="../../css/app.css" />
         <link rel="stylesheet" href="../../css/speech.css" />
         <link rel="stylesheet" href="../../css/spinner.css" />
+        <link rel="stylesheet" href="../../css/font-awesome.min.css" />
 
         <script type="text/javascript" src="../../js/jquery.min.js"></script>
         <script type="text/javascript" src="../../js/bootstrap.min.js"></script> 
@@ -55,12 +56,12 @@ if ( !isset($_SESSION['schtroumpf']) || !isset($_SESSION['papa']) )
 		<div id="subtitle" class="speech">
 		    <div id="isubtitle" class="ispeech"></div>
                     <div id="speaker" class="speaker">
-                    <div id="ispeaker" class="ispeaker">Couleur Caca</div>
+                    <div id="ispeaker" class="ispeaker"></div>
                     <div id="sfull" class="sfull" data-action="pause"><img src="../../img/fullscreen.png" width="20px" height="20px" /></div>
                     </div>
                 </div>
 		<div id="toolbar" class="upper-toolbar">
-		    <div id="cursor" class="speech-cursor">&nbsp;</div>
+		    <div id="cursor" class="speech-cursor"></div>
                     <div id="zvalue" class="zoom-value"></div>
                     <img id="plus" src="../../img/plus.png" width=20px height=20px />
                     <img id="minus" src="../../img/minus.png" width=20px height=20px />
@@ -73,7 +74,7 @@ if ( !isset($_SESSION['schtroumpf']) || !isset($_SESSION['papa']) )
                     <div id="audiobook-div"><img id="audiobook" src="../../img/audiobook.png" width="30px" height="30px" /></div>
                     <div class="modal-content">
                       <center>
-                        <img id="fplay" width=25px height=25px src="../../img/play.png" data-action="play">
+                        <i id="fplay" class="fa fa-play fa-2x" data-action="play"></i>  
                       </center>
                       <form role="form" id="edit" name="edit" style="transition: opacity 300ms linear; margin: 30px 0;">
                          <div class="form-group">
@@ -134,11 +135,11 @@ if ( !isset($_SESSION['schtroumpf']) || !isset($_SESSION['papa']) )
                 </div>
 
                 <br/><br/>
-                <div class="row" style="width:100%;">
+                <div class="row" style="width:100%;padding:20px">
                     <center>
-                        <img id="backward" width=40px height=40px src="../../img/backward.png" data-action="back">
-                        <img id="play" width=40px height=40px src="../../img/play.png" data-action="play">
-                        <img id="forward" width=40px height=40px src="../../img/forward.png" data-action="forth">
+                        <i id="backward" class="media-button fa fa-backward fa-2x" data-action="back"></i>
+                        <i id="play" class="media-button fa fa-play fa-2x" data-action="play"></i>  
+                        <i id="forward" class="media-button fa fa-forward fa-2x" data-action="forth"></i>  
                     </center>
 
                     <div style="margin-left:40%; margin-top:30px;">
@@ -150,7 +151,6 @@ if ( !isset($_SESSION['schtroumpf']) || !isset($_SESSION['papa']) )
                 </div>
             </div>
             <div id="notes" class="outer-notes">
-                I'm here
             </div>
         </div>
     </body>

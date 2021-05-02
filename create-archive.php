@@ -11,7 +11,7 @@ if ( !isset($_SESSION['schtroumpf']) || !isset($_SESSION['papa']) )
     exit();
 }
 
-  $servroot = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" : "http") . "://$_SERVER[HTTP_HOST]:$_SERVER[HTTP_PORT]";
+  $servroot = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" : "http") . "://$_SERVER[HTTP_HOST]:$_SERVER[SERVER_PORT]";
   
   if ( empty($_GET['file']) )
   {

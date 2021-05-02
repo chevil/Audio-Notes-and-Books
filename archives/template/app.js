@@ -179,7 +179,7 @@ document.addEventListener('DOMContentLoaded', function() {
     wavesurfer.on('region-in', showNote);
     wavesurfer.on('region-out', deleteNote);
     wavesurfer.on('region-play', function(region) {
-        console.log( 'got region play : ' + region.id );
+        // console.log( 'got region play : ' + region.id );
         region.on('out', function() {
             console.log( 'restart playing');
             wavesurfer.play(region.start);
@@ -191,18 +191,18 @@ document.addEventListener('DOMContentLoaded', function() {
         moveSpeech();
     });
 
-    /* Toggle play/pause buttons. */
-    var playButton = document.querySelector('#play');
-    var fplayButton = document.querySelector('#fplay');
-
     wavesurfer.on('play', function() {
-        playButton.src = '../../img/pause.png';
-        fplayButton.src = '../../img/pause.png';
+        $("#play").removeClass('fa-play');
+        $("#play").addClass('fa-pause');
+        $("#fplay").removeClass('fa-play');
+        $("#fplay").addClass('fa-pause');
     });
 
     wavesurfer.on('pause', function() {
-        playButton.src = '../../img/play.png';
-        fplayButton.src = '../../img/play.png';
+        $("#play").removeClass('fa-pause');
+        $("#play").addClass('fa-play');
+        $("#fplay").removeClass('fa-pause');
+        $("#fplay").addClass('fa-play');
     });
 
     wavesurfer.responsive=true;
@@ -329,7 +329,6 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 
     $('#zvalue').html("x"+(wzoom+1));
-
     $('#subtitle').css('opacity',0.0);
 
     tinymce.init({
@@ -361,6 +360,7 @@ document.addEventListener('DOMContentLoaded', function() {
  */
 function saveRegions() {
     var counter=0;
+    var navigation="<center><b>Navigate</b></center><br/><br/>";
     localStorage.regions = JSON.stringify(
         Object.keys(wavesurfer.regions.list).map(function(id) {
             var region = wavesurfer.regions.list[id];
@@ -370,6 +370,9 @@ function saveRegions() {
                burl = burl.substr( 0, burl.indexOf('?') );
             } 
             counter++;
+            console.log(region.data.note);
+            var leyenda = region.data.note.replaceAll("<div>","").replaceAll("</div>","").substring(0,20)+"...";
+            navigation+="<a href='javascript: playAt("+region.start+")'>"+counter+" - "+leyenda+"<br/></a>";
             return {
                 order: counter,
                 start: region.start,
@@ -384,11 +387,13 @@ function saveRegions() {
         })
     );
     // console.log( "saving : " + counter + " annotations" );
+    $("#notes").html(navigation);
 
+    anotes = JSON.parse(localStorage.regions);
     var jqxhr = $.post( {
       url: 'save-annotations.php',
       data: {
-	'json': localStorage.regions
+	'json': JSON.stringify(anotes.sort(sorta))
       },
       dataType: 'application/json'
     }, function() {
@@ -416,6 +421,7 @@ function loadRegions(regions) {
     });
     wavesurfer.on('region-updated', saveRegions);
     wavesurfer.on('region-removed', saveRegions);
+    saveRegions();
 }
 
 /**
@@ -652,10 +658,18 @@ var sorta = function( notea, noteb ) {
     }
 }
 
+var playAt = function(position) {
+    wavesurfer.seekTo( position/wavesurfer.getDuration() );
+    wavesurfer.play();
+}
+
 window.GLOBAL_ACTIONS['export'] = function() {
     anotes = JSON.parse(localStorage.regions);
-    window.open(
-        'data:application/json;charset=utf-8,' +
-            JSON.stringify(anotes.sort(sorta))
-    );
+    if ( anotes.length === 0 )
+    {
+       alertify.alert( "There is nothing to export!" );
+       return;
+    }
+    window.open("./annotations.json",
+                document.querySelector('#title').innerHTML.toString());
 };

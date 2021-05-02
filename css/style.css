@@ -63,7 +63,8 @@ body {
 
 .outer-notes {
     float: left;
-    width: 20%; 
+    width: 18%; 
+    margin-left: 2%; 
 }
 
 /* Responsive: Portrait tablets and up */
