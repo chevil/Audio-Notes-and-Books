@@ -370,8 +370,9 @@ function saveRegions() {
                burl = burl.substr( 0, burl.indexOf('?') );
             } 
             counter++;
-            console.log(region.data.note);
-            var leyenda = region.data.note.replaceAll("<div>","").replaceAll("</div>","").substring(0,20)+"...";
+            var leyenda = "";
+            if ( typeof region.data.note != "undefined" ) 
+                leyenda = region.data.note.replaceAll("<div>","").replaceAll("</div>","").substring(0,20)+"...";
             navigation+="<a href='javascript: playAt("+region.start+")'>"+counter+" - "+leyenda+"<br/></a>";
             return {
                 order: counter,
