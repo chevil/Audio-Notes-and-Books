@@ -26,7 +26,7 @@ var fullEncode = function(w)
 
 var toMMSS = function(duration)
 {
-   console.log(duration);
+   // console.log(duration);
    var min = Math.floor(duration/60);
    var duration = duration - min*60;
    var sduration = duration.toLocaleString("en-US", {
@@ -397,7 +397,7 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 
     $('#zvalue').html("x"+(wzoom+1));
-    $('#subtitle').css('opacity',0.0);
+    // $('#subtitle').css('display','block');
 
     tinymce.init({
       selector: '#note',
@@ -439,7 +439,9 @@ function saveRegions() {
             } 
             counter++;
             // console.log(region.data.note);
-            var leyenda = region.data.note.replaceAll("<div>","").replaceAll("</div>","").substring(0,20)+"...";
+            var leyenda = "";
+            if ( typeof region.data.note != "undefined" )
+               leyenda = region.data.note.replaceAll("<div>","").replaceAll("</div>","").substring(0,20)+"...";
             navigation+="<a href='javascript: playAt("+region.start+")'>"+counter+" - "+leyenda+"<br/></a>";
             return {
                 order: counter,
@@ -647,13 +649,13 @@ function showNote(region) {
     }
     showNote.el.innerHTML = region.data.note || '';
     showNote.speaker.innerHTML = region.data.user || '';
-    showNote.speaker.style.background = region.data.color || '';
-    showNote.sfull.style.background = region.data.color || '';
+    // showNote.speaker.style.background = region.data.color || '';
+    // showNote.sfull.style.background = region.data.color || '';
     // showNote.el.innerHTML = showNote.el.innerHTML.replace(/\n/g,'<br>');
     if ( showNote.el.innerHTML != '' )
-       showNote.uel.style.opacity = 1.0;
+       showNote.uel.style.display = 'block';
     else
-       showNote.uel.style.opacity = 0.0;
+       showNote.uel.style.display = 'none';
 }
 
 /**
@@ -666,12 +668,12 @@ function deleteNote(region) {
        deleteNote.uel = document.querySelector('#subtitle');
        deleteNote.speaker = document.querySelector('#ispeaker');
     }
-    deleteNote.uel.style.opacity = 0.0;
+    deleteNote.uel.style.display = 'none';
     if ( !region.data.note ) return;
     if ( deleteNote.el.innerHTML === region.data.note.replace(" />",">") )
        deleteNote.el.innerHTML = '';
     else
-       deleteNote.uel.style.opacity = 1.0;
+       deleteNote.uel.style.display = 'block';
 }
 
 /**

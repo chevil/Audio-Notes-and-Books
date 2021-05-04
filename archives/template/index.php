@@ -44,8 +44,8 @@ if ( !isset($_SESSION['schtroumpf']) || !isset($_SESSION['papa']) )
     </head>
 
     <body>
-    <a href="../../index.php"><img src="../../img/back.png" style="float:left; margin-left:20px; margin-top:-15px;" width=30px height=30px /></a>
-    <img id="help" src="../../img/help.png" style="float:left; margin-left:10px;" width=30px height=30px>
+    <a href="../../index.php"><i class="fa fa-chevron-left fa-2x" aria-hidden="true" style="color: #000000; float:left; margin-left:20px; margin-top:-15px;" ></i></a>
+    <i id="help" class="fa fa-question-circle fa-2x" aria-hidden="true" style="float:left; margin-left:20px; margin-top:-15px;" ></i> 
 
         <div class="container">
             <div class="header">
@@ -57,7 +57,7 @@ if ( !isset($_SESSION['schtroumpf']) || !isset($_SESSION['papa']) )
 		    <div id="isubtitle" class="ispeech"></div>
                     <div id="speaker" class="speaker">
                     <div id="ispeaker" class="ispeaker"></div>
-                    <div id="sfull" class="sfull" data-action="pause"><img src="../../img/fullscreen.png" width="20px" height="20px" /></div>
+                    <i id="sfull" class="fa fa-expand sfull" aria-hidden="true" data-action="pause"></i>
                     </div>
                 </div>
 		<div class="upper-toolbar">
@@ -78,7 +78,7 @@ if ( !isset($_SESSION['schtroumpf']) || !isset($_SESSION['papa']) )
                 <div id="wave-minimap"></div>
                 <div class="modal fade" id="modal-form" role="dialog">
                   <div class="modal-dialog">
-                    <div id="audiobook-div"><img id="audiobook" src="../../img/audiobook.png" width="30px" height="30px" /></div>
+                    <div id="audiobook-div"><i id="audiobook" class="fa fa-book fa-2x" width="30px" height="30px" /></i></div>
                     <div class="modal-content">
                       <center>
                         <i id="fplay" class="fa fa-play fa-2x" data-action="play"></i>  

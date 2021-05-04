@@ -1,8 +1,8 @@
 .sfull {
   float: right;
   margin-right: 20px;
-  width: 20px;
-  height: 23px;
+  width: 50px;
+  height: 40px;
   z-index: 1024;
 }
 
@@ -14,12 +14,14 @@
   width: 340px;
   font-size: 16px;
   z-index: 1024;
+  display: table;
+  clear: both;
+  width: 100%;
 }
 
 .ispeaker {
   float: left;
   height: 23px;
-  width: 300px;
   padding-left: 20px;
   font-size: 16px;
   z-index: 1024;
@@ -32,7 +34,7 @@
   height: 120px;
   padding: 0px;
   z-index: 1024;
-  visibility: none;
+  display: none;
 }
 
 .ispeech {
@@ -55,19 +57,5 @@
   -moz-box-shadow: 2px 2px 4px #888;
   box-shadow: 2px 2px 4px #888;
   overflow: hidden;
-  z-index: 1024;
-}
-
-.speech-cursor {
-  content: '';
-  position: relative;
-  width: 0;
-  height: 0;
-  float: left;
-  left: 30px;
-  top: 0px;
-  margin-top: 0px;
-  border: 10px solid;
-  border-color: #666 transparent transparent #666;
   z-index: 1024;
 }
