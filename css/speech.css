@@ -3,6 +3,7 @@
   margin-right: 20px;
   width: 20px;
   height: 23px;
+  z-index: 1024;
 }
 
 .speaker {
@@ -12,6 +13,7 @@
   height: 23px;
   width: 340px;
   font-size: 16px;
+  z-index: 1024;
 }
 
 .ispeaker {
@@ -20,14 +22,17 @@
   width: 300px;
   padding-left: 20px;
   font-size: 16px;
+  z-index: 1024;
 }
 
 .speech {
   position: absolute;
-  margin-top: 60px;
+  margin-top: 80px;
   width: 360px;
   height: 120px;
   padding: 0px;
+  z-index: 1024;
+  visibility: none;
 }
 
 .ispeech {
@@ -64,4 +69,5 @@
   margin-top: 0px;
   border: 10px solid;
   border-color: #666 transparent transparent #666;
+  z-index: 1024;
 }

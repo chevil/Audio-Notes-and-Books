@@ -56,6 +56,13 @@ body {
     width: 100%;
 }
 
+.lower-toolbar {
+    content: "";
+    display: table;
+    clear: both;
+    width: 100%;
+}
+
 .outer-wave {
     float: left;
     width: 80%; 

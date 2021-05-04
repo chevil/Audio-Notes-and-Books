@@ -2,8 +2,10 @@
  * Create a WaveSurfer instance.
  */
 var wavesurfer;
-var wzoom=19;
+var wzoom=9;
+var wspeed=1.0;
 var evid;
+var sevid;
 var currentRegion;
 var soundfile = '__file_url__';
 
@@ -20,6 +22,18 @@ var fullEncode = function(w)
 
  var encodedW = encodeURI(w);
  return encodedW.replace(/[&<>"']/g, function(m) { return map[m];});
+}
+
+var toMMSS = function(duration)
+{
+   console.log(duration);
+   var min = Math.floor(duration/60);
+   var duration = duration - min*60;
+   var sduration = duration.toLocaleString("en-US", {
+       minimumFractionDigits: 2,
+       maximumFractionDigits: 2
+   });
+   return min+":"+sduration;
 }
 
 var getPosition = function(e)
@@ -74,6 +88,18 @@ var incZoom = function() {
     evid = setTimeout( incZoom, 50 );
 }
 
+var decSpeed = function() {
+    wspeed=Math.max(wspeed-0.1,0.1);
+    $('#svalue').html(("x"+wspeed).substring(0,4));
+    svid = setTimeout( decSpeed, 500 );
+}
+
+var incSpeed = function() {
+    wspeed=Math.min(wspeed+0.1,5.0);
+    $('#svalue').html(("x"+wspeed).substring(0,4));
+    svid = setTimeout( incSpeed, 500 );
+}
+
 var moveSpeech = function() {
     var curx, curxx;
     if ( wzoom > 0 ) {
@@ -86,13 +112,14 @@ var moveSpeech = function() {
        curxx=(wavesurfer.getDuration()-wavesurfer.getCurrentTime())*$("#waveform").width()/wavesurfer.getDuration()+1;
     }
     if ( curxx <= $("#waveform").width()/2 ) {
-       $(".speech-cursor").css('left', ($("#waveform").width()-curxx)+'px' );
+       // $(".speech-cursor").css('left', ($("#waveform").width()-curxx)+'px' );
        // $(".speech").css('margin-left', ($("#waveform").width()-curxx-40)+'px' );
     } else {
        if ( curx > $("#waveform").width()/2 ) curx = $("#waveform").width()/2;
-       $(".speech-cursor").css('left', curx+'px' );
+       // $(".speech-cursor").css('left', curx+'px' );
        $(".speech").css('margin-left', (curx-40)+'px' );
     }
+    $(".play-time").html( toMMSS(wavesurfer.getCurrentTime()) + " / " + toMMSS(wavesurfer.getDuration()) );
 }
 
 /**
@@ -160,6 +187,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 .on('success', function(data) {
                     loadRegions(data);
                     wavesurfer.zoom(wzoom);
+                    $('#svalue').html(("x"+wspeed).substring(0,4));
 		    if ( sstart !== null )
                     {
                        if ( ( wavesurfer.getDuration() > 0 ) && ( sstart >= 0 ) && ( sstart <= wavesurfer.getDuration() ) )
@@ -207,24 +235,64 @@ document.addEventListener('DOMContentLoaded', function() {
 
     wavesurfer.responsive=true;
 
-    $('#minus').on('mousedown', function() {
+    $('#zminus').on('mousedown', function() {
        evid = setTimeout( decZoom, 50 );
     });
 
-    $('#minus').on('mouseup', function() {
+    $('#zminus').on('mouseup', function() {
        clearTimeout(evid);
        wavesurfer.zoom(wzoom);
        moveSpeech();
     });
 
-    $('#plus').on('mousedown', function() {
+    $('#zminus').on('mouseout', function() {
+       clearTimeout(evid);
+       wavesurfer.zoom(wzoom);
+       moveSpeech();
+    });
+
+    $('#zplus').on('mousedown', function() {
        evid = setTimeout( incZoom, 50 );
     });
 
-    $('#plus').on('mouseup', function() {
+    $('#zplus').on('mouseup', function() {
        clearTimeout(evid);
        wavesurfer.zoom(wzoom);
        moveSpeech();
+    });
+
+    $('#zplus').on('mouseout', function() {
+       clearTimeout(evid);
+       wavesurfer.zoom(wzoom);
+       moveSpeech();
+    });
+
+    $('#sminus').on('mousedown', function() {
+       evid = setTimeout( decSpeed, 100 );
+    });
+
+    $('#sminus').on('mouseup', function() {
+       clearTimeout(svid);
+       wavesurfer.setPlaybackRate(wspeed);
+    });
+
+    $('#sminus').on('mouseout', function() {
+       clearTimeout(svid);
+       wavesurfer.setPlaybackRate(wspeed);
+    });
+
+    $('#splus').on('mousedown', function() {
+       evid = setTimeout( incSpeed, 100 );
+    });
+
+    $('#splus').on('mouseup', function() {
+       clearTimeout(svid);
+       wavesurfer.setPlaybackRate(wspeed);
+    });
+
+    $('#splus').on('mouseout', function() {
+       clearTimeout(svid);
+       wavesurfer.setPlaybackRate(wspeed);
     });
 
     $('#sfull').on('click', function() {
@@ -370,9 +438,8 @@ function saveRegions() {
                burl = burl.substr( 0, burl.indexOf('?') );
             } 
             counter++;
-            var leyenda = "";
-            if ( typeof region.data.note != "undefined" ) 
-                leyenda = region.data.note.replaceAll("<div>","").replaceAll("</div>","").substring(0,20)+"...";
+            // console.log(region.data.note);
+            var leyenda = region.data.note.replaceAll("<div>","").replaceAll("</div>","").substring(0,20)+"...";
             navigation+="<a href='javascript: playAt("+region.start+")'>"+counter+" - "+leyenda+"<br/></a>";
             return {
                 order: counter,

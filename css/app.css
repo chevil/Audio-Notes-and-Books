@@ -80,7 +80,7 @@ region.wavesurfer-region[data-region-highlight] {
   margin-top:-15px;
 }
 
-#minus,#plus {
+#zminus, #zplus, #splus, #sminus {
   float:right;
   margin-left:5px;
   margin-top:0px;
@@ -101,16 +101,44 @@ region.wavesurfer-region[data-region-highlight] {
   border-width:2px;
 }
 
-.zoom-value {
-  float:right;
-  width:50px;
+.play-time {
+  float:left;
+  width:250px;
   height:20px;
   font-size:16px;
   text-align:left;
   line-height:20px;
   margin-right:0px;
+  margin-left:2px;
+  margin-top:-5px;
+}
+
+.zoom-value, .speed-value {
+  float:right;
+  width:30px;
+  height:20px;
+  font-size:16px;
+  text-align:left;
+  line-height:20px;
+  margin-right:0px;
+  margin-left:2px;
+  margin-top:5px;
+}
+
+.zoom-label, .speed-label {
+  float:right;
+  width:100px;
+  height:20px;
+  text-align:center;
+  font-weight: bold;
+  line-height:20px;
+  margin-right:0px;
   margin-left:10px;
   margin-top:0px;
+}
+
+.speed-label {
+  width:50px;
 }
 
 wave {

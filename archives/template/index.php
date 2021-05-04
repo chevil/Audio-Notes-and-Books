@@ -60,11 +60,18 @@ if ( !isset($_SESSION['schtroumpf']) || !isset($_SESSION['papa']) )
                     <div id="sfull" class="sfull" data-action="pause"><img src="../../img/fullscreen.png" width="20px" height="20px" /></div>
                     </div>
                 </div>
-		<div id="toolbar" class="upper-toolbar">
-		    <div id="cursor" class="speech-cursor"></div>
+		<div class="upper-toolbar">
+                    <div id="zlabel" class="zoom-label">Zoom</div>
+                    <div id="slabel" class="speed-label">Speed</div>
+                </div>
+		<div class="lower-toolbar">
+		    <div id="ptime" class="play-time"></div>
                     <div id="zvalue" class="zoom-value"></div>
-                    <img id="plus" src="../../img/plus.png" width=20px height=20px />
-                    <img id="minus" src="../../img/minus.png" width=20px height=20px />
+                    <i id="zplus" class="fa fa-plus-square-o fa-2x" width=20px height=20px ></i>  
+                    <i id="zminus" class="fa fa-minus-square-o fa-2x" width=20px height=20px ></i>  
+                    <div id="svalue" class="speed-value"></div>
+                    <i id="splus" class="fa fa-plus-square-o fa-2x" width=20px height=20px ></i>  
+                    <i id="sminus" class="fa fa-minus-square-o fa-2x" width=20px height=20px ></i>  
                 </div>
                 <div id="waveform"></div>
                 <div id="wave-timeline"></div>
