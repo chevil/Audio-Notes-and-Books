@@ -72,32 +72,26 @@ var getPosition = function(e)
 
 var decZoom = function() {
     wzoom=Math.max(wzoom-1,0);
-    if ( wzoom < 2 )
-       $('#zvalue').html("x"+(wzoom+1));
-    else
-       $('#zvalue').html("x"+(wzoom+2));
-    evid = setTimeout( decZoom, 50 );
+    $('#zvalue').html("x"+(wzoom+1));
+    evid = setTimeout( "decZoom();", 500 );
 }
 
 var incZoom = function() {
     wzoom=Math.min(wzoom+1,198);
-    if ( wzoom < 2 )
-       $('#zvalue').html("x"+(wzoom+1));
-    else
-       $('#zvalue').html("x"+(wzoom+2));
-    evid = setTimeout( incZoom, 50 );
+    $('#zvalue').html("x"+(wzoom+1));
+    evid = setTimeout( "incZoom();", 500 );
 }
 
 var decSpeed = function() {
     wspeed=Math.max(wspeed-0.1,0.1);
     $('#svalue').html(("x"+wspeed).substring(0,4));
-    svid = setTimeout( decSpeed, 500 );
+    svid = setTimeout( "decSpeed();", 500 );
 }
 
 var incSpeed = function() {
     wspeed=Math.min(wspeed+0.1,5.0);
     $('#svalue').html(("x"+wspeed).substring(0,4));
-    svid = setTimeout( incSpeed, 500 );
+    svid = setTimeout( "incSpeed();", 500 );
 }
 
 var moveSpeech = function() {
@@ -127,29 +121,33 @@ var moveSpeech = function() {
  */
 document.addEventListener('DOMContentLoaded', function() {
 
+    progressColor = $("#progresscolor").html();
+    waveColor = $("#wavecolor").html();
+    mapProgressColor = $("#mapprogresscolor").html();
+    mapWaveColor = $("#mapwavecolor").html();
     // Init wavesurfer
     wavesurfer = WaveSurfer.create({
         container: '#waveform',
         height: 200,
         pixelRatio: 1,
         scrollParent: true,
-        normalize: true,
+        normalize: false,
         minimap: true,
-        barRadius: 10,
+        barRadius: 0,
         forceDecode: true,
-        progressColor: '#60f373',
-        waveColor: '#67549f',
+        waveColor: waveColor,
+        progressColor: progressColor,
         backend: 'MediaElement',
         plugins: [
             WaveSurfer.regions.create(),
             WaveSurfer.minimap.create({
-                container: '#wave-minimap',
-                height: 50,
-                showRegions: true,
-                showOverview: true,
-                waveColor: '#987f45',
-                progressColor: '#899f67',
-                cursorColor: '#60f373'
+                 container: '#wave-minimap',
+                 height: 50,
+                 showRegions: true,
+                 showOverview: true,
+                 waveColor: mapWaveColor,
+                 progressColor: mapProgressColor,
+                 cursorColor: '#000000' // black
             }),
             WaveSurfer.timeline.create({
                 container: '#wave-timeline'
@@ -236,7 +234,7 @@ document.addEventListener('DOMContentLoaded', function() {
     wavesurfer.responsive=true;
 
     $('#zminus').on('mousedown', function() {
-       evid = setTimeout( decZoom, 50 );
+       evid = setTimeout( "decZoom();", 100 );
     });
 
     $('#zminus').on('mouseup', function() {
@@ -252,23 +250,23 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 
     $('#zplus').on('mousedown', function() {
-       evid = setTimeout( incZoom, 50 );
+       evid = setTimeout( "incZoom();", 100 );
     });
 
     $('#zplus').on('mouseup', function() {
        clearTimeout(evid);
-       wavesurfer.zoom(wzoom);
+       wavesurfer.zoom(wzoom+1);
        moveSpeech();
     });
 
     $('#zplus').on('mouseout', function() {
        clearTimeout(evid);
-       wavesurfer.zoom(wzoom);
+       wavesurfer.zoom(wzoom+1);
        moveSpeech();
     });
 
     $('#sminus').on('mousedown', function() {
-       evid = setTimeout( decSpeed, 100 );
+       evid = setTimeout( "decSpeed();", 100 );
     });
 
     $('#sminus').on('mouseup', function() {
@@ -282,7 +280,7 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 
     $('#splus').on('mousedown', function() {
-       evid = setTimeout( incSpeed, 100 );
+       evid = setTimeout( "incSpeed();", 100 );
     });
 
     $('#splus').on('mouseup', function() {
@@ -467,13 +465,14 @@ function saveRegions() {
       },
       dataType: 'application/json'
     }, function() {
-       console.log( "saving annotations succeeded" );
+       // console.log( "Saving annotations succeeded" );
     })
     .fail(function(error) {
        if ( error.status === 200 ) {
           // console.log( "saving annotations success");
        } else {
-          console.log( "saving annotations failed : " + JSON.stringify(error));
+          console.log( "Saving annotations failed : status : " + error.status + " message : " + JSON.stringify(error));
+          alertify.alert(  "Saving annotations failed : status : " + error.status + " message : " + JSON.stringify(error) );
        }
     });
 }

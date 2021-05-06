@@ -1,11 +1,34 @@
 <?php
 
+include("../../config.php");
+include("../../functions.php");
+
 session_start();
 
 if ( !isset($_SESSION['schtroumpf']) || !isset($_SESSION['papa']) )
 {
     header( "Location: ../../index.php" );
     exit();
+}
+
+// reading user's colors
+$waveColor="#000000";
+$progressColor="#000000";
+$mapWaveColor="#000000";
+$mapProgressColor="#000000";
+
+$ressettings = db_query( "SELECT name, value FROM settings" );
+
+while ( $rowsetting = mysqli_fetch_array( $ressettings) )
+{
+   if ( $rowsetting['name'] == "waveColor" )
+      $waveColor = $rowsetting['value'];
+   if ( $rowsetting['name'] == "progressColor" )
+      $progressColor = $rowsetting['value'];
+   if ( $rowsetting['name'] == "mapWaveColor" )
+      $mapWaveColor = $rowsetting['value'];
+   if ( $rowsetting['name'] == "mapProgressColor" )
+      $mapProgressColor = $rowsetting['value'];
 }
 
 ?>
@@ -149,17 +172,21 @@ if ( !isset($_SESSION['schtroumpf']) || !isset($_SESSION['papa']) )
                         <i id="forward" class="media-button fa fa-forward fa-2x" data-action="forth"></i>  
                     </center>
 
-                    <div style="margin-left:40%; margin-top:30px;">
-                        <button class="btn btn-info btn-block btn-export" data-action="export" title="Export annotations to JSON">
-                            <i class="glyphicon glyphicon-file"></i>
-                            Export Annotations
-                        </button>
-                    </div>
                 </div>
             </div>
             <div id="notes" class="outer-notes">
             </div>
+            <div class="export-notes">
+               <button class="btn btn-info btn-block btn-export" data-action="export" title="Export annotations to JSON">
+                   <i class="glyphicon glyphicon-file"></i>
+                   Export Annotations
+                </button>
+             </div>
         </div>
+        <div id="wavecolor" style="display:none;"><?php echo $waveColor; ?></div>
+        <div id="progresscolor" style="display:none;"><?php echo $progressColor; ?></div>
+        <div id="mapwavecolor" style="display:none;"><?php echo $mapWaveColor; ?></div>
+        <div id="mapprogresscolor" style="display:none;"><?php echo $mapProgressColor; ?></div>
     </body>
 
 <script type="text/javascript" >

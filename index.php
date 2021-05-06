@@ -83,7 +83,7 @@ session_start();
       });
     }
 
-    function doDeleteUser(id) {
+   function doDeleteUser(id) {
       $.post( "delete-user.php", { _id: id }, function(data) {
         if ( data == "OK" )
         {
@@ -97,19 +97,23 @@ session_start();
       .fail(function() {
         alertify.alert("Couldn't delete user");
       });
-    }
+   }
 
-    function createArchive() {
+   function createArchive() {
       document.location="create-archive-form.php";
-    }
+   }
 
-    function manageArchives() {
+   function manageArchives() {
       document.location="manage-archives.php";
-    }
+   }
 
-    function manageBooks() {
+   function editSettings() {
+     document.location="edit-settings.php";
+   }
+
+   function manageBooks() {
       document.location="manage-books.php";
-    }
+   }
 
   </script>
 
@@ -138,6 +142,9 @@ print "
 <tr><td align=center>
 <button class='bluebutton' onclick='javascript:deleteUser()' align=center>Delete User</button>
 <div id='user-delete'></div>
+</td></tr>
+<tr><td align=center>
+<button class='bluebutton' onclick='javascript:editSettings()' align=center>Settings</button>
 </td></tr>
 ";
 

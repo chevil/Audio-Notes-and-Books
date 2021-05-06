@@ -7,6 +7,10 @@ region.wavesurfer-region[data-region-highlight] {
   box-shadow: 0px 1px 3px rgba(0, 0, 0, 0.05) inset, 0px 0px 8px rgba(82, 168, 236, 0.6);
 }
 
+overview {
+  border: 2px solid rgb(0, 0, 0);
+}
+
 .media-button {
   margin-left: 50px;
   margin-right: 50px;
@@ -144,7 +148,6 @@ region.wavesurfer-region[data-region-highlight] {
 wave {
   width: 100%;
   scrollbar-width: auto;
-  scrollbar-color: blue orange;
 }
 
 wave::-webkit-scrollbar {
@@ -152,17 +155,17 @@ wave::-webkit-scrollbar {
 }
 
 wave::-webkit-scrollbar-track {
-  background: orange;
+  background: #ffffff;
 }
 
 wave::-webkit-scrollbar-thumb {
-  background-color: blue;
-  border-radius: 20px;
-  border: 3px solid orange;
+  background-color: #dddddd;
+  border-radius: 5px;
+  border: 1px solid #000000;
 }
 
 #waveform {
-  margin-bottom: 20px;
+  margin-bottom: 2px;
 }
 
 #wave-minimap {
