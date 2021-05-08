@@ -131,8 +131,11 @@ document.addEventListener('DOMContentLoaded', function() {
         height: 200,
         pixelRatio: 1,
         scrollParent: true,
-        normalize: false,
+        normalize: true,
         minimap: true,
+        mediaControls: true,
+        fillParent: true,
+        hideScrollbar: true,
         barRadius: 0,
         forceDecode: true,
         waveColor: waveColor,
@@ -158,9 +161,15 @@ document.addEventListener('DOMContentLoaded', function() {
     wavesurfer.util
         .fetchFile({
             responseType: 'json',
-            url: 'rashomon.json'
+            url: 'peaks.json'
         })
         .on('success', function(data) {
+            if (false) for ( i=0; i<data.length; i++ )
+            {
+               data[i]=data[i]*2;
+               if ( data[i] > 1.0 ) data[i] = 1.0;
+               if ( data[i] < -1.0 ) data[i] = -1.0;
+            }
             wavesurfer.load(
                 soundfile,
                 data

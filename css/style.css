@@ -1,7 +1,7 @@
 /* Space out content a bit */
 body {
     padding-top: 20px;
-    padding-bottom: 20px;
+    padding-bottom: 5px;
 }
 
 /* Everything but the jumbotron gets side spacing for mobile first views */
@@ -22,7 +22,7 @@ body {
     margin-top: 0;
     margin-bottom: 0;
     line-height: 40px;
-    padding-bottom: 19px;
+    padding-bottom: 5px;
 }
 
 /* Custom page footer */
@@ -68,6 +68,11 @@ body {
     width: 80%; 
 }
 
+.outer-wave-full {
+    float: left;
+    width: 100%; 
+}
+
 .outer-notes {
     float: left;
     width: 18%; 
@@ -95,7 +100,7 @@ body {
     }
     /* Space out the masthead */
     .header {
-        margin-bottom: 30px;
+        margin-bottom: 10px;
     }
 }
 
