@@ -4,9 +4,11 @@
 var wavesurfer;
 var wavewidth=940;
 var nbPeaks=32768;
-var wzoom=1;
+var wzoom=10;
 var wspeed=1.0;
 var gotPeaks=false;
+var peaks;
+var regions;
 var evid;
 var sevid;
 var currentRegion;
@@ -99,8 +101,9 @@ document.addEventListener('DOMContentLoaded', function() {
         responseType: 'json',
         url: 'peaks.json'
     }, function(data) {
-        console.log( "got peaks : " + data.length );
-        if ( data.length == 2*nbPeaks )
+        peaks = data;
+        console.log( "got peaks : " + peaks.length );
+        if ( peaks.length == 2*nbPeaks )
         {
            // Init wavesurfer
            wavesurfer = WaveSurfer.create({
@@ -118,7 +121,10 @@ document.addEventListener('DOMContentLoaded', function() {
               backend: 'MediaElement',
               minPxPerSec: 50,
               waveColor: waveColor,
-              progressColor: progressColor
+              progressColor: progressColor,
+              plugins: [
+                 WaveSurfer.regions.create(),
+              ]
            });
 
            console.log( "loading with peaks : " + soundfile );
@@ -145,7 +151,10 @@ document.addEventListener('DOMContentLoaded', function() {
               backend: 'WebAudio',
               minPxPerSec: 50,
               waveColor: waveColor,
-              progressColor: progressColor
+              progressColor: progressColor,
+              plugins: [
+                 WaveSurfer.regions.create(),
+              ]
            });
 
            console.log( "loading : " + soundfile );
@@ -184,6 +193,27 @@ document.addEventListener('DOMContentLoaded', function() {
                gotPeaks = true;
             }
 
+            regions = extractRegions( peaks, wavesurfer.getDuration() );
+            regions.forEach( function( region) {
+               wregion = wavesurfer.regions.add({
+                   start: region.start,
+                   end: region.end,
+                   data: {
+                     note: "",
+                     user: user,
+                     color: ucolor
+                   }
+               });
+               // console.log( wregion.id );
+               var range = "<p>"+toMMSS(region.start)+" - "+toMMSS(region.end)+" : </p>";
+               $("#linear-notes").append(range);
+               var rplay = "<i class='fa fa-play fa-1x linear-play' id='r"+wregion.id+"' onclick='playRegion(\""+wregion.id+"\")'></i>";
+               $("#linear-notes").append(rplay);
+               var ncontent = "<textarea id='"+wregion.id+"' class='note-textarea'></textarea>";
+               $("#linear-notes").append(ncontent);
+            });
+            saveRegions();
+
             if (0) {
                 loadRegions(JSON.parse(localStorage.regions));
             } else {
@@ -207,23 +237,16 @@ document.addEventListener('DOMContentLoaded', function() {
                     });
             }
         });
+
+        wavesurfer.on('region-click', propagateClick);
     
         wavesurfer.on('audioprocess', function() {
             $(".play-time").html( toMMSS(wavesurfer.getCurrentTime()) + " / " + toMMSS(wavesurfer.getDuration()) );
         });
     
-        wavesurfer.on('play', function() {
-            $("#play").removeClass('fa-play');
-            $("#play").addClass('fa-pause');
-            $("#fplay").removeClass('fa-play');
-            $("#fplay").addClass('fa-pause');
-        });
-    
         wavesurfer.on('pause', function() {
-            $("#play").removeClass('fa-pause');
-            $("#play").addClass('fa-play');
-            $("#fplay").removeClass('fa-pause');
-            $("#fplay").addClass('fa-play');
+            $(".linear-play").removeClass('fa-pause');
+            $(".linear-play").addClass('fa-play');
         });
     
         wavesurfer.responsive=true;
@@ -237,12 +260,12 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 
     $('#sminus').on('mouseup', function() {
-       clearTimeout(svid);
+       if ( typeof svid != "undefined" ) clearTimeout(svid);
        wavesurfer.setPlaybackRate(wspeed);
     });
 
     $('#sminus').on('mouseout', function() {
-       clearTimeout(svid);
+       if ( typeof svid != "undefined" ) clearTimeout(svid);
        wavesurfer.setPlaybackRate(wspeed);
     });
 
@@ -251,12 +274,12 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 
     $('#splus').on('mouseup', function() {
-       clearTimeout(svid);
+       if ( typeof svid != "undefined" ) clearTimeout(svid);
        wavesurfer.setPlaybackRate(wspeed);
     });
 
     $('#splus').on('mouseout', function() {
-       clearTimeout(svid);
+       if ( typeof svid != "undefined" ) clearTimeout(svid);
        wavesurfer.setPlaybackRate(wspeed);
     });
 
@@ -272,8 +295,7 @@ document.addEventListener('DOMContentLoaded', function() {
  * Save annotations to the server.
  */
 function saveRegions() {
-    var counter=0;
-    var navigation="<center><b>Navigate</b></center><br/><br/>";
+    var counter=4096;
     localStorage.regions = JSON.stringify(
         Object.keys(wavesurfer.regions.list).map(function(id) {
             var region = wavesurfer.regions.list[id];
@@ -287,7 +309,6 @@ function saveRegions() {
             var leyenda = "";
             if ( typeof region.data.note != "undefined" )
                leyenda = region.data.note.replaceAll("<div>","").replaceAll("</div>","").substring(0,20)+"...";
-            navigation+="<a href='javascript: playAt("+region.start+")'>"+counter+" - "+leyenda+"<br/></a>";
             return {
                 order: counter,
                 start: region.start,
@@ -302,11 +323,10 @@ function saveRegions() {
         })
     );
     // console.log( "saving : " + counter + " annotations" );
-    $("#notes").html(navigation);
 
     anotes = JSON.parse(localStorage.regions);
     var jqxhr = $.post( {
-      url: 'save-annotations.php',
+      url: 'save-annotations-linear.php',
       data: {
 	'json': JSON.stringify(anotes.sort(sorta))
       },
@@ -337,7 +357,7 @@ function loadRegions(regions) {
  */
 function extractRegions(peaks, duration) {
     // Silence params
-    var minValue = 0.0015;
+    var minValue = 0.015;
     var minSeconds = 0.25;
 
     var length = peaks.length;
@@ -436,6 +456,15 @@ var sorta = function( notea, noteb ) {
     } else {
       return 0;
     }
+}
+
+var playRegion = function(regid) {
+    var region = wavesurfer.regions.list[regid];
+    region.setLoop(true);
+    region.playLoop();
+    region.setLoop(false);
+    $("#r"+regid).removeClass("fa-play");
+    $("#r"+regid).addClass("fa-pause");
 }
 
 var playAt = function(position) {

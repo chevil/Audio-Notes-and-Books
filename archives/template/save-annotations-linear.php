@@ -8,7 +8,7 @@ include("../../config.php");
      exit(-1);
   }
   $annotations = $_POST['json'];
-  if ( !file_put_contents( "./annotations.json", $annotations ) )
+  if ( !file_put_contents( "./annotations-linear.json", $annotations ) )
   {
      $error = error_get_last();
      header('HTTP/1.1 500 Could not store annotations : '.$error['message']);	  
@@ -68,7 +68,7 @@ include("../../config.php");
      }
   }
 
-  header('HTTP/1.1 200 OK');	  
+  header('HTTP/1.1 200 OK');
   $link->query("UNLOCK TABLES `annotations`");
   mysqli_close($link);
   exit(0);

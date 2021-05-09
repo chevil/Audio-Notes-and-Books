@@ -100,6 +100,7 @@ var moveSpeech = function() {
     $("wave").each(function(i) {
        if (i===1 ) curx = $(this).width();
     });
+    if ( curx > $("#waveform").width()/2 ) curx = $("#waveform").width()/2;
     $(".speech").css('margin-left', (curx-40)+'px' );
     $(".play-time").html( toMMSS(wavesurfer.getCurrentTime()) + " / " + toMMSS(wavesurfer.getDuration()) );
 }

@@ -52,6 +52,7 @@ while ( $rowsetting = mysqli_fetch_array( $ressettings) )
         <script type="text/javascript" src="../../js/jquery.min.js"></script>
         <script type="text/javascript" src="../../js/bootstrap.min.js"></script> 
         <script type="text/javascript" src="../../js/wavesurfer.min.js"></script>
+        <script type="text/javascript" src="../../js/wavesurfer.regions.min.js"></script>
 
         <script type="text/javascript" src="../../js/trivia.js"></script>
         <script type="text/javascript" src="../../js/alertify.min.js"></script>
@@ -107,7 +108,7 @@ while ( $rowsetting = mysqli_fetch_array( $ressettings) )
                 </div>
                 -->
             </div>
-            <div id="notes" class="outer-notes">
+            <div id="linear-notes" class="linear-outer-notes">
             </div>
             <!--
             <div class="export-notes">
