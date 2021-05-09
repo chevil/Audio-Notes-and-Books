@@ -68,9 +68,24 @@ while ( $rowsetting = mysqli_fetch_array( $ressettings) )
 
     <body>
 
+        <div class="modal fade" id="modal-help" role="dialog">
+            <div class="modal-dialog modal-hdialog">
+                <div class="modal-content modal-hcontent">
+                    <p>
+                    <center><b>Mini help :</b></center><br />
+                     Select a part of the file to create a region.<br /><br />
+                     Double Click on a region to play it and enter a transcription or an annotation.<br /><br />
+                     To resume playing the file normally, close the annotation form.<br /><br />
+                     When a region is edited, you can add it to an audio book clicking on the audiobook icon.
+                 </p>
+                 </div>
+             </div>
+        </div>
+
         <div class="container">
             <div class="header">
                 <h3 itemprop="title" id="title">Title : __title__ (__date__)</h3>
+                <i id="help" class="fa fa-question-circle fa-2x" aria-hidden="true" ></i>
             </div>
 
             <div id="demo" class="outer-wave">

@@ -10,6 +10,8 @@ if (!isset($_SESSION['schtroumpf']) || !isset($_SESSION['papa']) )
    die();
 }
 
+$servroot = "https://$_SERVER[HTTP_HOST]:$_SERVER[SERVER_PORT]";
+
 if ( isset( $_GET['search'] ) )
 {
    $search = strtolower($_GET['search']);
@@ -167,7 +169,7 @@ while ( $page < $nbpages )
 <?php
 
 $count = $start+1;
-print "<th align=left>Author</th><th align=left>Title</th><th align=left>Genre / Collection</th><th align=left>Date</th><th align=left>Creator</th><th align=center>Edit</th><th align=center>Delete</th><th align=center>Annotations</th>";
+print "<th align=left>Author</th><th align=left>Title</th><th align=left>Genre / Collection</th><th align=left>Date</th><th align=left>Creator</th><th align=center>Edit</th><th align=center>Delete</th><th align=center>Notes</th>";
 while ( $rowuser = mysqli_fetch_row( $respageusers) )
 {
    print "<tr><td align=left>".$rowuser[3]."</td>";
@@ -177,7 +179,7 @@ while ( $rowuser = mysqli_fetch_row( $respageusers) )
    print "<td align=left>".$rowuser[7]."</td>";
    print "<td align=center><a href='javascript:editArchive(".$rowuser[0].");'><img src='img/edit.png' width=20px height=20px /></a></td>";
    print "<td align=center><a href='javascript:deleteArchive(".$rowuser[0].");'><img src='img/delete.png' width=20px height=20px /></a></td>";
-   print "<td align=center><a href='".htmlentities($rowuser[1], ENT_QUOTES)."'><img src='img/see.png' width=20px height=20px /></a></td>";
+   print "<td align=center><a href='".$servroot.dirname($_SERVER['SCRIPT_NAME'])."/".htmlentities($rowuser[1], ENT_QUOTES)."'><img src='img/see.png' width=20px height=20px /></a></td>";
    print "</tr>";
    $count++;
 }

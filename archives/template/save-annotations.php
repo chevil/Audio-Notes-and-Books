@@ -23,7 +23,7 @@ include("../../config.php");
      exit(-1);
   } else {
      $link->query("SET NAMES utf8");
-     $link->query("LOCK TABLES");
+     $link->query("LOCK TABLES `annotation`");
      $annotes = json_decode( $annotations, true );
      // error_log( __FILE__." got : ".count($annotes)." notes" );
      foreach( $annotes as $note )

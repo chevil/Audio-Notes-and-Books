@@ -79,9 +79,9 @@ overview {
 }
 
 #help {
-  float:left;
-  margin-left:5px;
-  margin-top:-15px;
+  float:right;
+  margin-right:20px;
+  margin-top:-30px;
 }
 
 #zminus, #zplus, #splus, #sminus {

@@ -83,6 +83,7 @@ sed -i "s#__artist__#$sartist#g" "archives/$dirname/free-notes.php"
 sed -i "s#__artist__#$sartist#g" "archives/$dirname/linear-notes.php"
 sed -i "s#__date__#$sdate#g" "archives/$dirname/free-notes.php"
 sed -i "s#__date__#$sdate#g" "archives/$dirname/linear-notes.php"
+sed -i "s#__title__#$title#g" "archives/$dirname/index.php" 
 sed -i "s#__title__#$title#g" "archives/$dirname/free-notes.php" 
 sed -i "s#__title__#$title#g" "archives/$dirname/linear-notes.php" 
 

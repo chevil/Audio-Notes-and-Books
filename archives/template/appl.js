@@ -2,8 +2,11 @@
  * Create a WaveSurfer instance.
  */
 var wavesurfer;
-var wzoom=0.1;
+var wavewidth=940;
+var nbPeaks=32768;
+var wzoom=1;
 var wspeed=1.0;
+var gotPeaks=false;
 var evid;
 var sevid;
 var currentRegion;
@@ -91,91 +94,144 @@ document.addEventListener('DOMContentLoaded', function() {
     waveColor = $("#wavecolor").html();
     mapProgressColor = $("#mapprogresscolor").html();
     mapWaveColor = $("#mapwavecolor").html();
-    // Init wavesurfer
-    wavesurfer = WaveSurfer.create({
-        container: '#waveform',
-        height: 100,
-        pixelRatio: 1,
-        scrollParent: true,
-        normalize: true,
-        minimap: true,
-        barRadius: 0,
-        forceDecode: true,
-        fillParent: true,
-        mediaControls: true,
-        hideScrollbar: true,
-        waveColor: waveColor,
-        progressColor: progressColor,
-        backend: 'MediaElement',
-    });
 
-    // util?
-    // wavesurfer.init();
+    var jqxhr = $.post( {
+        responseType: 'json',
+        url: 'peaks.json'
+    }, function(data) {
+        console.log( "got peaks : " + data.length );
+        if ( data.length == 2*nbPeaks )
+        {
+           // Init wavesurfer
+           wavesurfer = WaveSurfer.create({
+              container: '#waveform',
+              height: 100,
+              pixelRatio: 1,
+              scrollParent: true,
+              normalize: true,
+              minimap: true,
+              barRadius: 0,
+              forceDecode: false,
+              fillParent: true,
+              mediaControls: true,
+              hideScrollbar: true,
+              backend: 'MediaElement',
+              minPxPerSec: 50,
+              waveColor: waveColor,
+              progressColor: progressColor
+           });
 
-    wavesurfer.util
-        .fetchFile({
-            responseType: 'json',
-            url: 'peaks.json'
-        })
-        .on('success', function(data) {
-            for ( i=0; i<data.length; i++ )
-            {
-               data[i]=data[i]*3;
-            }
-            wavesurfer.load(
-                soundfile,
-                data
-            );
-        });
-
-    /* Regions */
-    wavesurfer.on('ready', function() {
-
-        if (0) {
-            loadRegions(JSON.parse(localStorage.regions));
+           console.log( "loading with peaks : " + soundfile );
+           $('.lds-spinner').css('display','block');
+           wavesurfer.load(
+              soundfile,
+              data
+           );
+           gotPeaks=true;
         } else {
-            wavesurfer.util
-                .fetchFile({
-                    responseType: 'json',
-                    url: 'annotations.json'
-                })
-                .on('success', function(data) {
-                    loadRegions(data);
-                    $('#svalue').html(("x"+wspeed).substring(0,4));
-                    $(".play-time").html( toMMSS(wavesurfer.getCurrentTime()) + " / " + toMMSS(wavesurfer.getDuration()) );
-                    wzoom = 940/wavesurfer.getDuration();
-                    wavesurfer.zoom(wzoom);
-		    if ( sstart !== null )
-                    {
-                       if ( ( wavesurfer.getDuration() > 0 ) && ( sstart >= 0 ) && ( sstart <= wavesurfer.getDuration() ) )
-                       {
-		          wavesurfer.seekTo( sstart/wavesurfer.getDuration() );
-                       }
-                    }
-                });
+           // Init wavesurfer
+           wavesurfer = WaveSurfer.create({
+              container: '#waveform',
+              height: 100,
+              pixelRatio: 1,
+              scrollParent: true,
+              normalize: true,
+              minimap: true,
+              barRadius: 0,
+              forceDecode: false,
+              fillParent: true,
+              mediaControls: true,
+              hideScrollbar: true,
+              backend: 'WebAudio',
+              minPxPerSec: 50,
+              waveColor: waveColor,
+              progressColor: progressColor
+           });
+
+           console.log( "loading : " + soundfile );
+           $('.lds-spinner').css('display','block');
+           wavesurfer.load(
+              soundfile
+           );
+           gotPeaks=false;
         }
+
+        /* Regions */
+        wavesurfer.on('ready', function() {
+
+            $('.lds-spinner').css('display','none');
+            if ( !gotPeaks )
+            {
+               aPeaks = wavesurfer.backend.getPeaks(nbPeaks);
+               console.log( "saving peaks : " + aPeaks.length );
+               var jqxhr = $.post( {
+                   url: 'save-peaks.php',
+                   data: {
+	               'json': JSON.stringify(aPeaks)
+                   },
+                   dataType: 'application/json'
+               }, function() {
+                   console.log( "saving peaks succeeded" );
+                   location.reload();
+               }).fail(function(error) {
+                   if ( error.status === 200 ) {
+                      console.log( "saving peaks success");
+                      location.reload();
+                   } else {
+                      console.log( "saving peaks failed : status : " + error.status + " message : " + JSON.stringify(error));
+                   }
+               });
+               gotPeaks = true;
+            }
+
+            if (0) {
+                loadRegions(JSON.parse(localStorage.regions));
+            } else {
+                wavesurfer.util
+                    .fetchFile({
+                        responseType: 'json',
+                        url: 'annotations.json'
+                    })
+                    .on('success', function(data) {
+                        loadRegions(data);
+                        $('#svalue').html(("x"+wspeed).substring(0,4));
+                        $(".play-time").html( toMMSS(wavesurfer.getCurrentTime()) + " / " + toMMSS(wavesurfer.getDuration()) );
+                        wavesurfer.zoom(wzoom);
+    		        if ( sstart !== null )
+                        {
+                           if ( ( wavesurfer.getDuration() > 0 ) && ( sstart >= 0 ) && ( sstart <= wavesurfer.getDuration() ) )
+                           {
+    		               wavesurfer.seekTo( sstart/wavesurfer.getDuration() );
+                           }
+                        }
+                    });
+            }
+        });
+    
+        wavesurfer.on('audioprocess', function() {
+            $(".play-time").html( toMMSS(wavesurfer.getCurrentTime()) + " / " + toMMSS(wavesurfer.getDuration()) );
+        });
+    
+        wavesurfer.on('play', function() {
+            $("#play").removeClass('fa-play');
+            $("#play").addClass('fa-pause');
+            $("#fplay").removeClass('fa-play');
+            $("#fplay").addClass('fa-pause');
+        });
+    
+        wavesurfer.on('pause', function() {
+            $("#play").removeClass('fa-pause');
+            $("#play").addClass('fa-play');
+            $("#fplay").removeClass('fa-pause');
+            $("#fplay").addClass('fa-play');
+        });
+    
+        wavesurfer.responsive=true;
+
+    }).fail(function(error) {
+        console.log( "couldn't load peaks : " + JSON.stringify(error) );
     });
-
-    wavesurfer.on('audioprocess', function() {
-        $(".play-time").html( toMMSS(wavesurfer.getCurrentTime()) + " / " + toMMSS(wavesurfer.getDuration()) );
-    });
-
-    wavesurfer.on('play', function() {
-        $("#play").removeClass('fa-play');
-        $("#play").addClass('fa-pause');
-        $("#fplay").removeClass('fa-play');
-        $("#fplay").addClass('fa-pause');
-    });
-
-    wavesurfer.on('pause', function() {
-        $("#play").removeClass('fa-pause');
-        $("#play").addClass('fa-play');
-        $("#fplay").removeClass('fa-pause');
-        $("#fplay").addClass('fa-play');
-    });
-
-    wavesurfer.responsive=true;
-
+    
     $('#sminus').on('mousedown', function() {
        evid = setTimeout( "decSpeed();", 100 );
     });
@@ -202,6 +258,10 @@ document.addEventListener('DOMContentLoaded', function() {
     $('#splus').on('mouseout', function() {
        clearTimeout(svid);
        wavesurfer.setPlaybackRate(wspeed);
+    });
+
+    $('#help').on('click', function() {
+        $("#modal-help").modal("show");
     });
 
     $('.lds-spinner').css('display','none');

@@ -2,7 +2,7 @@
  * Create a WaveSurfer instance.
  */
 var wavesurfer;
-var wzoom=9;
+var wzoom;
 var wspeed=1.0;
 var evid;
 var sevid;
@@ -71,14 +71,14 @@ var getPosition = function(e)
 }
 
 var decZoom = function() {
-    wzoom=Math.max(wzoom-1,0);
-    $('#zvalue').html("x"+(wzoom+1));
+    wzoom=Math.max(wzoom-1,1);
+    $('#zvalue').html("x"+(wzoom));
     evid = setTimeout( "decZoom();", 500 );
 }
 
 var incZoom = function() {
     wzoom=Math.min(wzoom+1,198);
-    $('#zvalue').html("x"+(wzoom+1));
+    $('#zvalue').html("x"+(wzoom));
     evid = setTimeout( "incZoom();", 500 );
 }
 
@@ -96,23 +96,11 @@ var incSpeed = function() {
 
 var moveSpeech = function() {
     var curx, curxx;
-    if ( wzoom > 0 ) {
-       curx=wavesurfer.getCurrentTime()*wzoom-1;
-       curxx=(wavesurfer.getDuration()-wavesurfer.getCurrentTime())*wzoom+1;
-    }
-    else
-    {
-       curx=wavesurfer.getCurrentTime()*$("#waveform").width()/wavesurfer.getDuration()-1;
-       curxx=(wavesurfer.getDuration()-wavesurfer.getCurrentTime())*$("#waveform").width()/wavesurfer.getDuration()+1;
-    }
-    if ( curxx <= $("#waveform").width()/2 ) {
-       // $(".speech-cursor").css('left', ($("#waveform").width()-curxx)+'px' );
-       // $(".speech").css('margin-left', ($("#waveform").width()-curxx-40)+'px' );
-    } else {
-       if ( curx > $("#waveform").width()/2 ) curx = $("#waveform").width()/2;
-       // $(".speech-cursor").css('left', curx+'px' );
-       $(".speech").css('margin-left', (curx-40)+'px' );
-    }
+    // trick to get cursor position
+    $("wave").each(function(i) {
+       if (i===1 ) curx = $(this).width();
+    });
+    $(".speech").css('margin-left', (curx-40)+'px' );
     $(".play-time").html( toMMSS(wavesurfer.getCurrentTime()) + " / " + toMMSS(wavesurfer.getDuration()) );
 }
 
@@ -137,7 +125,7 @@ document.addEventListener('DOMContentLoaded', function() {
         fillParent: true,
         hideScrollbar: true,
         barRadius: 0,
-        forceDecode: true,
+        forceDecode: false,
         waveColor: waveColor,
         progressColor: progressColor,
         backend: 'MediaElement',
@@ -164,12 +152,6 @@ document.addEventListener('DOMContentLoaded', function() {
             url: 'peaks.json'
         })
         .on('success', function(data) {
-            if (false) for ( i=0; i<data.length; i++ )
-            {
-               data[i]=data[i]*2;
-               if ( data[i] > 1.0 ) data[i] = 1.0;
-               if ( data[i] < -1.0 ) data[i] = -1.0;
-            }
             wavesurfer.load(
                 soundfile,
                 data
@@ -193,6 +175,10 @@ document.addEventListener('DOMContentLoaded', function() {
                 })
                 .on('success', function(data) {
                     loadRegions(data);
+                    // zoom is the number of minutes limited to 10
+                    wzoom = Math.floor( wavesurfer.getDuration() / 60.0 )+1;
+                    if ( wzoom > 10 ) wzoom = 10;
+                    $('#zvalue').html("x"+(wzoom));
                     wavesurfer.zoom(wzoom);
                     $('#svalue').html(("x"+wspeed).substring(0,4));
 		    if ( sstart !== null )
@@ -247,13 +233,13 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 
     $('#zminus').on('mouseup', function() {
-       clearTimeout(evid);
+       if ( typeof evid != "undefined" ) clearTimeout(evid);
        wavesurfer.zoom(wzoom);
        moveSpeech();
     });
 
     $('#zminus').on('mouseout', function() {
-       clearTimeout(evid);
+       if ( typeof evid != "undefined" ) clearTimeout(evid);
        wavesurfer.zoom(wzoom);
        moveSpeech();
     });
@@ -263,14 +249,14 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 
     $('#zplus').on('mouseup', function() {
-       clearTimeout(evid);
-       wavesurfer.zoom(wzoom+1);
+       if ( typeof evid != "undefined" ) clearTimeout(evid);
+       wavesurfer.zoom(wzoom);
        moveSpeech();
     });
 
     $('#zplus').on('mouseout', function() {
-       clearTimeout(evid);
-       wavesurfer.zoom(wzoom+1);
+       if ( typeof evid != "undefined" ) clearTimeout(evid);
+       wavesurfer.zoom(wzoom);
        moveSpeech();
     });
 
@@ -279,12 +265,12 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 
     $('#sminus').on('mouseup', function() {
-       clearTimeout(svid);
+       if ( typeof svid != "undefined" ) clearTimeout(svid);
        wavesurfer.setPlaybackRate(wspeed);
     });
 
     $('#sminus').on('mouseout', function() {
-       clearTimeout(svid);
+       if ( typeof svid != "undefined" ) clearTimeout(svid);
        wavesurfer.setPlaybackRate(wspeed);
     });
 
@@ -293,12 +279,12 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 
     $('#splus').on('mouseup', function() {
-       clearTimeout(svid);
+       if ( typeof svid != "undefined" ) clearTimeout(svid);
        wavesurfer.setPlaybackRate(wspeed);
     });
 
     $('#splus').on('mouseout', function() {
-       clearTimeout(svid);
+       if ( typeof svid != "undefined" ) clearTimeout(svid);
        wavesurfer.setPlaybackRate(wspeed);
     });
 
@@ -306,6 +292,10 @@ document.addEventListener('DOMContentLoaded', function() {
        var ih = document.querySelector('#isubtitle').innerHTML;
        document.querySelector('#content-fs').innerHTML = ih;
        $("#modal-sfull").modal("show");
+    });
+
+    $('#help').on('click', function() {
+        $("#modal-help").modal("show");
     });
 
     $('#audiobook').on('click', function() {
@@ -403,7 +393,6 @@ document.addEventListener('DOMContentLoaded', function() {
         $("#modal-help").modal("show");
     });
 
-    $('#zvalue').html("x"+(wzoom+1));
     // $('#subtitle').css('display','block');
 
     tinymce.init({

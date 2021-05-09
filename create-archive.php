@@ -11,7 +11,7 @@ if ( !isset($_SESSION['schtroumpf']) || !isset($_SESSION['papa']) )
     exit();
 }
 
-  $servroot = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" : "http") . "://$_SERVER[HTTP_HOST]:$_SERVER[SERVER_PORT]";
+  $servroot = "https://$_SERVER[HTTP_HOST]:$_SERVER[SERVER_PORT]";
   
   if ( empty($_GET['file']) )
   {
@@ -19,6 +19,11 @@ if ( !isset($_SESSION['schtroumpf']) || !isset($_SESSION['papa']) )
      exit(-1);
   }
   $file=$_GET['file'];
+  if ( !strstr($file, "https" ) )
+  {
+     print "ERR: File must be loaded over HTTPS";
+     exit(-1);
+  }
 
   if ( empty($_GET['user']) )
   {
