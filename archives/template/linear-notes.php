@@ -54,7 +54,8 @@ while ( $rowsetting = mysqli_fetch_array( $ressettings) )
         <script type="text/javascript" src="../../js/wavesurfer.min.js"></script>
         <script type="text/javascript" src="../../js/wavesurfer.regions.min.js"></script>
 
-        <script type="text/javascript" src="../../js/trivia.js"></script>
+        <!-- no global actions -->
+        <!-- <script type="text/javascript" src="../../js/trivia.js"></script> -->
         <script type="text/javascript" src="../../js/alertify.min.js"></script>
         <script type="text/javascript" src="../../js/circular-json.js"></script>
         <script type="text/javascript" src="https://cdn.tiny.cloud/1/fsisf6nug1vh20mrqte7djkhpu0j1umti1udbihiykd71g9w/tinymce/5/tinymce.min.js" referrerpolicy="origin"></script>
@@ -98,26 +99,9 @@ while ( $rowsetting = mysqli_fetch_array( $ressettings) )
                 <div class="lds-spinner"><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div></div>
                 <div id="waveform"></div>
                 <br/><br/>
-                <!--
-                <div class="row" style="width:100%;padding:20px">
-                    <center>
-                        <i id="backward" class="media-button fa fa-backward fa-1x" data-action="back"></i>
-                        <i id="play" class="media-button fa fa-play fa-1x" data-action="play"></i>  
-                        <i id="forward" class="media-button fa fa-forward fa-1x" data-action="forth"></i>  
-                    </center>
-                </div>
-                -->
             </div>
             <div id="linear-notes" class="linear-outer-notes">
             </div>
-            <!--
-            <div class="export-notes">
-               <button class="btn btn-info btn-block btn-export" data-action="export" title="Export annotations to JSON">
-                   <i class="glyphicon glyphicon-file"></i>
-                   Export Notes
-                </button>
-             </div>
-             -->
         </div>
         <div id="wavecolor" style="display:none;"><?php echo $waveColor; ?></div>
         <div id="progresscolor" style="display:none;"><?php echo $progressColor; ?></div>

@@ -12,7 +12,7 @@ var regions;
 var evid;
 var sevid;
 var currentRegion;
-var soundfile = '__file_url__';
+var soundfile = '__title__';
 
 var fullEncode = function(w)
 {
@@ -193,50 +193,45 @@ document.addEventListener('DOMContentLoaded', function() {
                gotPeaks = true;
             }
 
-            regions = extractRegions( peaks, wavesurfer.getDuration() );
-            regions.forEach( function( region) {
-               wregion = wavesurfer.regions.add({
-                   start: region.start,
-                   end: region.end,
-                   data: {
-                     note: "",
-                     user: user,
-                     color: ucolor
-                   }
-               });
-               // console.log( wregion.id );
-               var range = "<p>"+toMMSS(region.start)+" - "+toMMSS(region.end)+" : </p>";
-               $("#linear-notes").append(range);
-               var rplay = "<i class='fa fa-play fa-1x linear-play' id='r"+wregion.id+"' onclick='playRegion(\""+wregion.id+"\")'></i>";
-               $("#linear-notes").append(rplay);
-               var ncontent = "<textarea id='"+wregion.id+"' class='note-textarea'></textarea>";
-               $("#linear-notes").append(ncontent);
-            });
-            saveRegions();
+            var jqxhr = $.post( {
+                responseType: 'json',
+                url: 'annotations-linear.json'
+            }, function(data) {
 
-            if (0) {
-                loadRegions(JSON.parse(localStorage.regions));
-            } else {
-                wavesurfer.util
-                    .fetchFile({
-                        responseType: 'json',
-                        url: 'annotations.json'
-                    })
-                    .on('success', function(data) {
-                        loadRegions(data);
-                        $('#svalue').html(("x"+wspeed).substring(0,4));
-                        $(".play-time").html( toMMSS(wavesurfer.getCurrentTime()) + " / " + toMMSS(wavesurfer.getDuration()) );
-                        wavesurfer.zoom(wzoom);
-    		        if ( sstart !== null )
-                        {
-                           if ( ( wavesurfer.getDuration() > 0 ) && ( sstart >= 0 ) && ( sstart <= wavesurfer.getDuration() ) )
-                           {
-    		               wavesurfer.seekTo( sstart/wavesurfer.getDuration() );
-                           }
-                        }
-                    });
-            }
-        });
+                if (data) console.log( "got annotations : " + data.length );
+                if ( data.length > 0 )
+                   regions = data;
+                else
+                   regions = extractRegions( peaks, wavesurfer.getDuration() );
+
+                regions.forEach( function( region) {
+                   wregion = wavesurfer.regions.add({
+                       start: region.start,
+                       end: region.end,
+                       data: {
+                         note: region.data.note,
+                         user: user,
+                         color: ucolor
+                       }
+                   });
+                   // console.log( wregion.id );
+                   var range = "<p>"+toMMSS(region.start)+" - "+toMMSS(region.end)+" : </p>";
+                   $("#linear-notes").append(range);
+                   var rplay = "<i class='fa fa-play fa-1x linear-play' id='r"+wregion.id+"' onclick='playRegion(\""+wregion.id+"\")'></i>";
+                   $("#linear-notes").append(rplay);
+                   var ncontent = "<textarea id='"+wregion.id+"' class='note-textarea'>"+wregion.data.note+"</textarea>";
+                   $("#linear-notes").append(ncontent);
+                   $("#"+wregion.id).on( 'change', function(evt) {
+                        var id = $(this).attr('id');
+                        wavesurfer.regions.list[id].data.note=evt.target.value;
+                        saveRegions();
+                   });
+                });
+                saveRegions();
+            }).fail(function(error) {
+                console.log( "couldn't load aanotaions : " + JSON.stringify(error) );
+            });
+        }); // ready
 
         wavesurfer.on('region-click', propagateClick);
     
@@ -322,7 +317,7 @@ function saveRegions() {
             };
         })
     );
-    // console.log( "saving : " + counter + " annotations" );
+    // console.log( "saving : " + (counter-4096) + " annotations (linear)" );
 
     anotes = JSON.parse(localStorage.regions);
     var jqxhr = $.post( {
@@ -460,25 +455,23 @@ var sorta = function( notea, noteb ) {
 
 var playRegion = function(regid) {
     var region = wavesurfer.regions.list[regid];
-    region.setLoop(true);
-    region.playLoop();
-    region.setLoop(false);
-    $("#r"+regid).removeClass("fa-play");
-    $("#r"+regid).addClass("fa-pause");
+
+    console.log( "play region" );
+    if ( !wavesurfer.isPlaying() )
+    {
+       region.setLoop(true);
+       region.playLoop();
+       region.setLoop(false);
+       $("#r"+regid).removeClass("fa-play");
+       $("#r"+regid).addClass("fa-pause");
+    } else {
+       wavesurfer.pause();
+       $("#r"+regid).removeClass("fa-pause");
+       $("#r"+regid).addClass("fa-play");
+    }
 }
 
 var playAt = function(position) {
     wavesurfer.seekTo( position/wavesurfer.getDuration() );
     wavesurfer.play();
 }
-
-window.GLOBAL_ACTIONS['export'] = function() {
-    anotes = JSON.parse(localStorage.regions);
-    if ( anotes.length === 0 )
-    {
-       alertify.alert( "There is nothing to export!" );
-       return;
-    }
-    window.open("./annotations.json",
-                document.querySelector('#title').innerHTML.toString());
-};
