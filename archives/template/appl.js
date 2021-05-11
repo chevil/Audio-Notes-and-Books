@@ -7,12 +7,25 @@ var nbPeaks=32768;
 var wzoom=10;
 var wspeed=1.0;
 var gotPeaks=false;
+var languages = '--';
+var language = '--';
 var peaks;
 var regions;
 var evid;
 var sevid;
 var currentRegion;
-var soundfile = '__title__';
+var soundfile = '__file_url__";
+
+var strstr = function (haystack, needle) {
+  if (needle.length === 0) return 0;
+  if (needle === haystack) return 0;
+  for (let i = 0; i <= haystack.length - needle.length; i++) {
+    if (needle === haystack.substring(i, i + needle.length)) {
+      return i;
+    }
+  }
+  return -1;
+};
 
 var fullEncode = function(w)
 {
@@ -205,9 +218,21 @@ document.addEventListener('DOMContentLoaded', function() {
                    regions = extractRegions( peaks, wavesurfer.getDuration() );
 
                 regions.forEach( function( region) {
+                   var lines = region.data.note.split("\n");
+                   lines.forEach( function(line, index) {
+                      if ( line.length > 3 && line[2]==':' )
+                      {
+                         var lang = line.substring(0,2);
+                         if ( strstr( languages, lang ) < 0 ) {
+                            languages += ","+lang;
+                         } 
+                      } 
+                   });
                    wregion = wavesurfer.regions.add({
                        start: region.start,
                        end: region.end,
+                       resize: false,
+                       drag: false,
                        data: {
                          note: region.data.note,
                          user: user,
@@ -215,6 +240,8 @@ document.addEventListener('DOMContentLoaded', function() {
                        }
                    });
                    // console.log( wregion.id );
+                   var blank = "<br/><br/>";
+                   $("#linear-notes").append(blank);
                    var range = "<p>"+toMMSS(region.start)+" - "+toMMSS(region.end)+" : </p>";
                    $("#linear-notes").append(range);
                    var rplay = "<i class='fa fa-play fa-1x linear-play' id='r"+wregion.id+"' onclick='playRegion(\""+wregion.id+"\")'></i>";
@@ -228,12 +255,30 @@ document.addEventListener('DOMContentLoaded', function() {
                    });
                 });
                 saveRegions();
+                console.log( "we have : " + languages );
+                var header = "<center><div>Language</div></select>";
+                $("#subtitle-left").append(header);
+                var blank = "<br/>";
+                $("#subtitle-left").append(blank);
+                var select = "<center><select id='set-language' class='select-language'></select></center>";
+                $("#subtitle-left").append(select);
+                var options = languages.split(",");
+                options.forEach( function( option, index ) {
+                    var option = "<option value='"+option+"'>"+option+"</option>";
+                    $("#set-language").append(option);
+                });
+                $("#set-language").change(function() {
+                    language = $("#set-language option:selected").val();
+                    console.log("language set to : " + language );
+                });
             }).fail(function(error) {
                 console.log( "couldn't load aanotaions : " + JSON.stringify(error) );
             });
         }); // ready
 
         wavesurfer.on('region-click', propagateClick);
+        wavesurfer.on('region-in', showNote);
+        wavesurfer.on('region-out', deleteNote);
     
         wavesurfer.on('audioprocess', function() {
             $(".play-time").html( toMMSS(wavesurfer.getCurrentTime()) + " / " + toMMSS(wavesurfer.getDuration()) );
@@ -470,6 +515,41 @@ var playRegion = function(regid) {
        $("#r"+regid).addClass("fa-play");
     }
 }
+
+/**
+ * Display annotation.
+ */
+function showNote(region) {
+    console.log( "show note");
+    if (!showNote.el) {
+        showNote.el = document.querySelector('#subtitle');
+    }
+    var snote = '';
+    var notes = region.data.note.split("\n");
+    notes.forEach( function( line, index ) {
+        if ( strstr( line, ":" ) > 0 ) {
+           if ( language === '--' || language === line.substring(0,2) ) {
+              snote += line.substring(3)+"<br/>";
+           } 
+        } else {
+           snote += line+"<br/>";
+        }
+    });
+    showNote.el.innerHTML = snote;
+}
+
+/**
+ * Delete annotation.
+ */
+function deleteNote(region) {
+    console.log( "delete note");
+    if (!deleteNote.el) {
+       deleteNote.el = document.querySelector('#subtitle');
+    }
+    showNote.el.innerHTML = '';
+    if ( !region.data.note ) return;
+}
+
 
 var playAt = function(position) {
     wavesurfer.seekTo( position/wavesurfer.getDuration() );

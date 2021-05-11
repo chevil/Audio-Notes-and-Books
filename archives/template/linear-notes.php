@@ -71,10 +71,11 @@ while ( $rowsetting = mysqli_fetch_array( $ressettings) )
                 <div class="modal-content modal-hcontent">
                     <p>
                     <center><b>Mini help :</b></center><br />
-                     Select a part of the file to create a region.<br /><br />
-                     Double Click on a region to play it and enter a transcription or an annotation.<br /><br />
-                     To resume playing the file normally, close the annotation form.<br /><br />
-                     When a region is edited, you can add it to an audio book clicking on the audiobook icon.
+                     In this mode, the file is divided in sections divided by silence.<br /><br />
+                     You can enter a note for each section below that will appear when file is played.<br /><br />
+                     If you want to translate to different languages, you have to start your line with the abbreviation of the language. For example : "en: This conference tackles the issue of ..."<br /><br />
+                     You can enter multiple translations this way and the user can choose his language on the left side.<br /><br /> 
+                     If the sections created here automatically do not fit your archive, we recommend to use the free mode and create your regions yourself.
                  </p>
                  </div>
              </div>
@@ -98,6 +99,8 @@ while ( $rowsetting = mysqli_fetch_array( $ressettings) )
                 </div>
                 <div class="lds-spinner"><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div></div>
                 <div id="waveform"></div>
+                <div id="subtitle" class="linear-subtitle"></div>
+                <div id="subtitle-left" class="linear-subtitle-left"></div>
                 <br/><br/>
             </div>
             <div id="linear-notes" class="linear-outer-notes">

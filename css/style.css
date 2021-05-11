@@ -95,6 +95,21 @@ body {
     margin-top: -15px; 
 }
 
+.linear-subtitle {
+    width: 80%;
+    height: 80px;
+    margin-left: 10%;
+    float: left;
+    background: #ffffaa;
+    overflow-y: auto;
+}
+
+.linear-subtitle-left {
+    width: 10%;
+    float: right;
+    height: 80px;
+}
+
 .note-textarea {
     width: 100%; 
 }

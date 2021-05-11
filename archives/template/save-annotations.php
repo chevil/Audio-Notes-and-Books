@@ -59,11 +59,17 @@ include("../../config.php");
               exit(-1);
            }
          } else {
-           error_log( "ERROR : ".__FILE__." : found ".mysqli_num_rows($result)." annotations with order ".$note["order"] );
-           header('HTTP/1.1 500 Multiple annotation found');	  
-           $link->query("UNLOCK TABLES `annotation`");
-           mysqli_close($link);
-           exit(-1);
+           $dsql = "DELETE FROM annotation WHERE source='".$note["source"]."' AND norder=".$note["order"].";";
+           $delete = $link->query($dsql);
+           $isql = "INSERT INTO annotation ( norder, start, end, url, source, title, attributes, data, user, color ) VALUES ( ".$note["order"].",".$note["start"].",".$note["end"].",'".addslashes($note["url"])."','".addslashes($note["source"])."','".addslashes($note["title"])."','".json_encode($note["attributes"])."','".addslashes($ndata)."','".addslashes($nuser)."','".addslashes($ncolor)."' )";
+           $insert = $link->query($isql);
+           if ( $insert !== true ) {
+              error_log( "ERROR : ".__FILE__." : could not create annotation : ".$note["order"]." : ".mysqli_error($link) );
+              header('HTTP/1.1 500 Error creating annotation');	  
+              $link->query("UNLOCK TABLES `annotation`");
+              mysqli_close($link);
+              exit(-1);
+           }
          }
      }
   }
