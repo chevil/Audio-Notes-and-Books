@@ -14,7 +14,7 @@ var regions;
 var evid;
 var sevid;
 var currentRegion;
-var soundfile = '__file_url__";
+var soundfile = '__title__';
 
 var strstr = function (haystack, needle) {
   if (needle.length === 0) return 0;
@@ -42,16 +42,17 @@ var fullEncode = function(w)
  return encodedW.replace(/[&<>"']/g, function(m) { return map[m];});
 }
 
-var toMMSS = function(duration)
+var toHHMMSS = function(duration)
 {
    // console.log(duration);
-   var min = Math.floor(duration/60);
-   var duration = duration - min*60;
-   var sduration = duration.toLocaleString("en-US", {
-       minimumFractionDigits: 2,
-       maximumFractionDigits: 2
-   });
-   return min+":"+sduration;
+   var hours = Math.floor(duration/3600);
+   duration = duration-hours*3600;
+   var mins = Math.floor(duration/60);
+   duration = duration-mins*60;
+   var secs = Math.floor(duration);
+   duration = duration-secs;
+   var millis = Math.floor(duration*100);
+   return ("0"+hours).slice(-2)+":"+("0"+mins).slice(-2)+":"+("0"+secs).slice(-2)+"."+("0"+millis).slice(-2);
 }
 
 var getPosition = function(e)
@@ -242,7 +243,7 @@ document.addEventListener('DOMContentLoaded', function() {
                    // console.log( wregion.id );
                    var blank = "<br/><br/>";
                    $("#linear-notes").append(blank);
-                   var range = "<p>"+toMMSS(region.start)+" - "+toMMSS(region.end)+" : </p>";
+                   var range = "<p>"+toHHMMSS(region.start)+" - "+toHHMMSS(region.end)+" : </p>";
                    $("#linear-notes").append(range);
                    var rplay = "<i class='fa fa-play fa-1x linear-play' id='r"+wregion.id+"' onclick='playRegion(\""+wregion.id+"\")'></i>";
                    $("#linear-notes").append(rplay);
@@ -281,7 +282,7 @@ document.addEventListener('DOMContentLoaded', function() {
         wavesurfer.on('region-out', deleteNote);
     
         wavesurfer.on('audioprocess', function() {
-            $(".play-time").html( toMMSS(wavesurfer.getCurrentTime()) + " / " + toMMSS(wavesurfer.getDuration()) );
+            $(".play-time").html( toHHMMSS(wavesurfer.getCurrentTime()) + " / " + toHHMMSS(wavesurfer.getDuration()) );
         });
     
         wavesurfer.on('pause', function() {
@@ -525,8 +526,8 @@ function showNote(region) {
         showNote.el = document.querySelector('#subtitle');
     }
     var snote = '';
-    var notes = region.data.note.split("\n");
-    notes.forEach( function( line, index ) {
+    var lines = region.data.note.split("\n");
+    lines.forEach( function( line, index ) {
         if ( strstr( line, ":" ) > 0 ) {
            if ( language === '--' || language === line.substring(0,2) ) {
               snote += line.substring(3)+"<br/>";
@@ -555,3 +556,44 @@ var playAt = function(position) {
     wavesurfer.seekTo( position/wavesurfer.getDuration() );
     wavesurfer.play();
 }
+
+var exportSRT = function() {
+    anotes = JSON.parse(localStorage.regions);
+    anotes = anotes.sort(sorta);
+    if ( anotes.length === 0 )
+    {
+       alertify.alert( "There is nothing to export!" );
+       return;
+    }
+    var subtitles = '';
+    var counter = 1;
+    anotes.forEach( function(note, index) {
+       subtitles += counter+'\n';
+       counter++;
+       subtitles += toHHMMSS(note.start)+' --> '+toHHMMSS(note.end)+'\n';
+       var lines = note.data.note.split("\n");
+       lines.forEach( function( line, index ) {
+          if ( strstr( line, ":" ) > 0 ) {
+             if ( language === '--' || language === line.substring(0,2) ) {
+                subtitles += line.substring(3)+"\n";
+             } 
+          } else {
+             subtitles += line+'\n';
+          }
+       });
+       subtitles += '\n';
+    });
+
+    // force subtitles download
+    var element = document.createElement('a');
+    var rlanguage = language;
+    if ( language == '--' ) rlanguage='all';
+    var filename = $("#title").html().toString().substring(8)+"-"+rlanguage+'.srt';
+    element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(subtitles));
+    element.setAttribute('download', filename);
+    element.style.display = 'none';
+    document.body.appendChild(element);
+    element.click();
+    document.body.removeChild(element);
+};
+

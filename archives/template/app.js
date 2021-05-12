@@ -7,7 +7,7 @@ var wspeed=1.0;
 var evid;
 var sevid;
 var currentRegion;
-var soundfile = '__file_url__';
+var soundfile = '__title__';
 
 var fullEncode = function(w)
 {
@@ -24,16 +24,17 @@ var fullEncode = function(w)
  return encodedW.replace(/[&<>"']/g, function(m) { return map[m];});
 }
 
-var toMMSS = function(duration)
-{
+var toHHMMSS = function(duration)
+{  
    // console.log(duration);
-   var min = Math.floor(duration/60);
-   var duration = duration - min*60;
-   var sduration = duration.toLocaleString("en-US", {
-       minimumFractionDigits: 2,
-       maximumFractionDigits: 2
-   });
-   return min+":"+sduration;
+   var hours = Math.floor(duration/3600);
+   duration = duration-hours*3600;
+   var mins = Math.floor(duration/60);
+   duration = duration-mins*60;
+   var secs = Math.floor(duration);
+   duration = duration-secs;
+   var millis = Math.floor(duration*100);
+   return ("0"+hours).slice(-2)+":"+("0"+mins).slice(-2)+":"+("0"+secs).slice(-2)+"."+("0"+millis).slice(-2);
 }
 
 var getPosition = function(e)
@@ -102,7 +103,7 @@ var moveSpeech = function() {
     });
     if ( curx > $("#waveform").width()/2 ) curx = $("#waveform").width()/2;
     $(".speech").css('margin-left', (curx-40)+'px' );
-    $(".play-time").html( toMMSS(wavesurfer.getCurrentTime()) + " / " + toMMSS(wavesurfer.getDuration()) );
+    $(".play-time").html( toHHMMSS(wavesurfer.getCurrentTime()) + " / " + toHHMMSS(wavesurfer.getDuration()) );
 }
 
 /**
@@ -739,5 +740,6 @@ window.GLOBAL_ACTIONS['export'] = function() {
        return;
     }
     window.open("./annotations.json",
-                document.querySelector('#title').innerHTML.toString());
+                document.querySelector('#title').innerHTML.toString(),
+                "menubar=yes");
 };

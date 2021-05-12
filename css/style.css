@@ -110,6 +110,11 @@ body {
     height: 80px;
 }
 
+#export-subtitles {
+    width: 10%;
+    float: right;
+}
+
 .note-textarea {
     width: 100%; 
 }

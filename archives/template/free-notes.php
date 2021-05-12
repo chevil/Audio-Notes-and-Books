@@ -180,7 +180,7 @@ while ( $rowsetting = mysqli_fetch_array( $ressettings) )
             <div class="export-notes">
                <button class="btn btn-info btn-block btn-export" data-action="export" title="Export annotations to JSON">
                    <i class="glyphicon glyphicon-file"></i>
-                   Export Annotations
+                   Export
                 </button>
              </div>
         </div>
