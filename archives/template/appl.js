@@ -4,7 +4,7 @@
 var wavesurfer;
 var wavewidth=940;
 var nbPeaks=32768;
-var wzoom=10;
+var wzoom=1;
 var wspeed=1.0;
 var gotPeaks=false;
 var languages = '--';
@@ -212,12 +212,14 @@ document.addEventListener('DOMContentLoaded', function() {
                 url: 'annotations-linear.json'
             }, function(data) {
 
+                wavesurfer.zoom(wzoom);
                 if (data) console.log( "got annotations : " + data.length );
                 if ( data.length > 0 )
                    regions = data;
                 else
                    regions = extractRegions( peaks, wavesurfer.getDuration() );
 
+                $("#linear-notes").html('');
                 regions.forEach( function( region) {
                    if ( region.data != undefined && region.data.note != undefined ) {
                        var lines = region.data.note.split("\n");

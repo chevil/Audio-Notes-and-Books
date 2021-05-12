@@ -427,6 +427,7 @@ document.addEventListener('DOMContentLoaded', function() {
 function saveRegions() {
     var counter=0;
     var navigation="<center><b>Navigate</b></center><br/><br/>";
+    $("#linear-notes").html('');
     localStorage.regions = JSON.stringify(
         Object.keys(wavesurfer.regions.list).map(function(id) {
             var region = wavesurfer.regions.list[id];
@@ -437,10 +438,22 @@ function saveRegions() {
             } 
             counter++;
             // console.log(region.data.note);
-            var leyenda = "";
+            var leyenda = "...";
             if ( typeof region.data.note != "undefined" )
                leyenda = region.data.note.replaceAll("<div>","").replaceAll("</div>","").substring(0,20)+"...";
             navigation+="<a href='javascript: playAt("+region.start+")'>"+counter+" - "+leyenda+"<br/></a>";
+            var blank = "<br/><br/>";
+            $("#linear-notes").append(blank);
+            var range = "<p>"+toHHMMSS(region.start)+" - "+toHHMMSS(region.end)+" : </p>";
+            $("#linear-notes").append(range);
+            var rplay = "<i class='fa fa-play fa-1x linear-play' id='r"+region.id+"' onclick='playRegion(\""+region.id+"\")'></i>";
+            $("#linear-notes").append(rplay);
+            var wnote = '';
+            if ( region.data != undefined && region.data.note != undefined ) {
+               wnote = region.data.note.replaceAll("<div>","").replaceAll("</div>","");
+            }
+            var ncontent = "<textarea id='"+region.id+"' class='note-textarea' disabled>"+wnote+"</textarea>";
+            $("#linear-notes").append(ncontent);
             return {
                 order: counter,
                 start: region.start,
@@ -743,3 +756,21 @@ window.GLOBAL_ACTIONS['export'] = function() {
                 document.querySelector('#title').innerHTML.toString(),
                 "menubar=yes");
 };
+
+var playRegion = function(regid) {
+    var region = wavesurfer.regions.list[regid];
+
+    console.log( "play region" );
+    if ( !wavesurfer.isPlaying() )
+    {
+       region.setLoop(true);
+       region.playLoop();
+       region.setLoop(false);
+       $("#r"+regid).removeClass("fa-play");
+       $("#r"+regid).addClass("fa-pause");
+    } else {
+       wavesurfer.pause();
+       $("#r"+regid).removeClass("fa-pause");
+       $("#r"+regid).addClass("fa-play");
+    }
+}

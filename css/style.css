@@ -115,6 +115,18 @@ body {
     float: right;
 }
 
+#biography-edit {
+    width: 80%;
+    height: 800px;
+    margin-left: 10%;
+}
+
+#description-edit {
+    width: 80%;
+    height: 800px;
+    margin-left: 10%;
+}
+
 .note-textarea {
     width: 100%; 
 }

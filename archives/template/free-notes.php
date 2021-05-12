@@ -183,6 +183,8 @@ while ( $rowsetting = mysqli_fetch_array( $ressettings) )
                    Export
                 </button>
              </div>
+             <div id="linear-notes" class="linear-outer-notes">
+             </div>
         </div>
         <div id="wavecolor" style="display:none;"><?php echo $waveColor; ?></div>
         <div id="progresscolor" style="display:none;"><?php echo $progressColor; ?></div>
