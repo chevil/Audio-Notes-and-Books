@@ -219,23 +219,25 @@ document.addEventListener('DOMContentLoaded', function() {
                    regions = extractRegions( peaks, wavesurfer.getDuration() );
 
                 regions.forEach( function( region) {
-                   var lines = region.data.note.split("\n");
-                   lines.forEach( function(line, index) {
-                      if ( line.length > 3 && line[2]==':' )
-                      {
-                         var lang = line.substring(0,2);
-                         if ( strstr( languages, lang ) < 0 ) {
-                            languages += ","+lang;
-                         } 
-                      } 
-                   });
+                   if ( region.data != undefined && region.data.note != undefined ) {
+                       var lines = region.data.note.split("\n");
+                       lines.forEach( function(line, index) {
+                          if ( line.length > 3 && line[2]==':' )
+                          {
+                             var lang = line.substring(0,2);
+                             if ( strstr( languages, lang ) < 0 ) {
+                                languages += ","+lang;
+                             } 
+                          } 
+                       });
+                   }
                    wregion = wavesurfer.regions.add({
                        start: region.start,
                        end: region.end,
                        resize: false,
                        drag: false,
                        data: {
-                         note: region.data.note,
+                         note: ( region.data != undefined ) ? region.data.note : '',
                          user: user,
                          color: ucolor
                        }
