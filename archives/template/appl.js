@@ -14,7 +14,7 @@ var regions;
 var evid;
 var sevid;
 var currentRegion;
-var soundfile = '__title__';
+var soundfile = '__file_url__';
 
 var strstr = function (haystack, needle) {
   if (needle.length === 0) return 0;

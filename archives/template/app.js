@@ -7,7 +7,7 @@ var wspeed=1.0;
 var evid;
 var sevid;
 var currentRegion;
-var soundfile = '__title__';
+var soundfile = '__file_url__';
 
 var fullEncode = function(w)
 {
