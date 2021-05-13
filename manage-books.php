@@ -300,7 +300,7 @@ while ( $rowbook = mysqli_fetch_row( $respagebooks) )
 
 <div class="modal fade" id="modal-book" role="dialog">
   <div class="modal-dialog">
-    <div id="audiobook-div"><img id="audiobook" src="img/audiobook.png" width="30px" height="30px" /></div>
+    <center><b>Edit audiobook</b></center><br/>
     <div class="modal-content">
       <form role="form" type="post" action="javascript:updateBook()" id="edit" name="edit" style="transition: opacity 300ms linear; margin: 30px 0;">
          <div class="form-group">

@@ -76,7 +76,8 @@ while ( $rowsetting = mysqli_fetch_array( $ressettings) )
                      If you want to translate to different languages, you have to start your line with the abbreviation of the language. For example : "en: This conference tackles the issue of ..."<br /><br />
                      You can enter multiple translations this way and the user can choose his language on the right side.<br /><br /> 
                      You can also export the notes of a specific language to a subtitles file (SRT).<br /><br /> 
-                     If the sections created here automatically do not fit your archive, we recommend to use the free mode and create your regions yourself.
+                     As in free mode, you can add a note to an audiobook using the book icon next to it.<br /><br /> 
+                     Note : If the sections created here automatically do not fit your archive, we recommend to use the free mode and create your regions yourself.
                  </p>
                  </div>
              </div>
@@ -90,10 +91,14 @@ while ( $rowsetting = mysqli_fetch_array( $ressettings) )
 
             <div id="demo" class="outer-wave-full">
 		<div class="upper-toolbar">
-                    <div id="slabel" class="speed-label-solo">Speed</div>
+                    <div id="zlabel" class="zoom-label">Zoom</div>
+                    <div id="slabel" class="speed-label">Speed</div>
                 </div>
 		<div class="lower-toolbar">
 		    <div id="ptime" class="play-time"></div>
+                    <div id="zvalue" class="zoom-value"></div>
+                    <i id="zplus" class="fa fa-plus-square-o fa-2x" width=20px height=20px ></i>
+                    <i id="zminus" class="fa fa-minus-square-o fa-2x" width=20px height=20px ></i>
                     <div id="svalue" class="speed-value"></div>
                     <i id="splus" class="fa fa-plus-square-o fa-2x" width=20px height=20px ></i>  
                     <i id="sminus" class="fa fa-minus-square-o fa-2x" width=20px height=20px ></i>  
@@ -109,6 +114,30 @@ while ( $rowsetting = mysqli_fetch_array( $ressettings) )
                      </button>
                 </div>
                 <br/><br/>
+
+                <div class="modal fade" id="modal-book" role="dialog">
+                  <div class="modal-dialog modal-bdialog">
+                    <center><b>Add to audiobook</b></center><br/>
+                    <div class="modal-content modal-bcontent">
+                      <center>
+                         <div class="lds-spinner"><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div></div>
+                      </center>
+                      <form role="form" id="addbook" name="addbook" style="transition: opacity 300ms linear; margin: 30px 0;">
+                         <div class="form-group">
+                             <label for="oldbook">Add To Existing Book</label>
+                             <select id="oldbook" name="oldbook">
+                                <option value="none">None</option>
+                             </select>
+                         </div>
+                         <div class="form-group">
+                             <label for="newbook">Create New Book</label>
+                             <input class="form-control" id="newbook" name="newbook" />
+                         </div>
+                         <button type="submit" class="btn btn-success btn-block">Add</button>
+                      </form>
+                    </div>
+                  </div>
+                </div>
             </div>
             <div id="linear-notes" class="linear-outer-notes">
             </div>

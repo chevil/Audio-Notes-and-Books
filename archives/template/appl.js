@@ -4,7 +4,7 @@
 var wavesurfer;
 var wavewidth=940;
 var nbPeaks=32768;
-var wzoom=1;
+var wzoom=10;
 var wspeed=1.0;
 var gotPeaks=false;
 var languages = '--';
@@ -12,7 +12,7 @@ var language = '--';
 var peaks;
 var regions;
 var evid;
-var sevid;
+var svid;
 var currentRegion;
 var soundfile = '__file_url__';
 
@@ -87,6 +87,18 @@ var getPosition = function(e)
       }
     }
     return {x:x, y:y};
+}
+
+var decZoom = function() {
+    wzoom=Math.max(wzoom-1,1);
+    $('#zvalue').html("x"+(wzoom));
+    evid = setTimeout( "decZoom();", 500 );
+}
+
+var incZoom = function() {
+    wzoom=Math.min(wzoom+1,198);
+    $('#zvalue').html("x"+(wzoom));
+    evid = setTimeout( "incZoom();", 500 );
 }
 
 var decSpeed = function() {
@@ -212,7 +224,6 @@ document.addEventListener('DOMContentLoaded', function() {
                 url: 'annotations-linear.json'
             }, function(data) {
 
-                wavesurfer.zoom(wzoom);
                 if (data) console.log( "got annotations : " + data.length );
                 if ( data.length > 0 )
                    regions = data;
@@ -245,12 +256,14 @@ document.addEventListener('DOMContentLoaded', function() {
                        }
                    });
                    // console.log( wregion.id );
-                   var blank = "<br/><br/>";
+                   var blank = "<br/><br/><div class='linear-bar' id='bar-"+wregion.id+"'>";
                    $("#linear-notes").append(blank);
                    var range = "<p>"+toHHMMSS(region.start)+" - "+toHHMMSS(region.end)+" : </p>";
-                   $("#linear-notes").append(range);
+                   $("#bar-"+wregion.id).append(range);
+                   var rbook = "<i class='fa fa-book fa-1x linear-book' id='b"+wregion.id+"' onclick='addToBook(\""+wregion.id+"\")'></i>";
+                   $("#bar-"+wregion.id).append(rbook);
                    var rplay = "<i class='fa fa-play fa-1x linear-play' id='r"+wregion.id+"' onclick='playRegion(\""+wregion.id+"\")'></i>";
-                   $("#linear-notes").append(rplay);
+                   $("#bar-"+wregion.id).append(rplay);
                    var ncontent = "<textarea id='"+wregion.id+"' class='note-textarea'>"+wregion.data.note+"</textarea>";
                    $("#linear-notes").append(ncontent);
                    $("#"+wregion.id).on( 'change', function(evt) {
@@ -276,6 +289,14 @@ document.addEventListener('DOMContentLoaded', function() {
                     language = $("#set-language option:selected").val();
                     console.log("language set to : " + language );
                 });
+
+                // zoom is proportional to the number of minutes limited to 10
+                wzoom = Math.floor( wavesurfer.getDuration() / 60.0 )+1;
+                if ( wzoom > 10 ) wzoom = 10;
+                $('#zvalue').html("x"+(wzoom));
+                setTimeout( "wavesurfer.zoom(wzoom);", 5000 );
+                $('#svalue').html(("x"+wspeed).substring(0,4));
+
             }).fail(function(error) {
                 console.log( "couldn't load aanotaions : " + JSON.stringify(error) );
             });
@@ -285,6 +306,10 @@ document.addEventListener('DOMContentLoaded', function() {
         wavesurfer.on('region-in', showNote);
         wavesurfer.on('region-out', deleteNote);
     
+        wavesurfer.on('region-updated', function() {
+            wavesurfer.zoom(wzoom);
+        });
+
         wavesurfer.on('audioprocess', function() {
             $(".play-time").html( toHHMMSS(wavesurfer.getCurrentTime()) + " / " + toHHMMSS(wavesurfer.getDuration()) );
         });
@@ -298,6 +323,34 @@ document.addEventListener('DOMContentLoaded', function() {
 
     }).fail(function(error) {
         console.log( "couldn't load peaks : " + JSON.stringify(error) );
+    });
+
+    $('#zminus').on('mousedown', function() {
+       evid = setTimeout( "decZoom();", 100 );
+    });
+
+    $('#zminus').on('mouseup', function() {
+       if ( typeof evid != "undefined" ) clearTimeout(evid);
+       wavesurfer.zoom(wzoom);
+    });
+
+    $('#zminus').on('mouseout', function() {
+       if ( typeof evid != "undefined" ) clearTimeout(evid);
+       wavesurfer.zoom(wzoom);
+    });
+
+    $('#zplus').on('mousedown', function() {
+       evid = setTimeout( "incZoom();", 100 );
+    });
+
+    $('#zplus').on('mouseup', function() {
+       if ( typeof evid != "undefined" ) clearTimeout(evid);
+       wavesurfer.zoom(wzoom);
+    });
+
+    $('#zplus').on('mouseup', function() {
+       if ( typeof evid != "undefined" ) clearTimeout(evid);
+       wavesurfer.zoom(wzoom);
     });
     
     $('#sminus').on('mousedown', function() {
@@ -333,6 +386,31 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 
     $('.lds-spinner').css('display','none');
+
+    $("#modal-book").on("shown.bs.modal", function() {
+        var jqxhr = $.post( {
+           url: '../../get-audiobooks.php',
+        }, function(data) {
+           console.log( "got audiobooks : " + JSON.stringify(data));
+           var books = JSON.parse(data);
+           $('#oldbook option').each(function() {
+               $(this).remove();
+           });
+           $('#oldbook').append($('<option>', {
+               value: 'none',
+               text: 'none'
+           }));
+           $('#oldbook').val('none').trigger('chosen:updated'); //refreshes the drop down list
+           $.each(books, function (id, book) {
+               $('#oldbook').append($('<option>', {
+                 value: decodeURI(book),
+                 text: decodeURI(book)
+               }));
+           });
+        }).fail(function(error) {
+           console.log( "getting audiobooks failed : " + JSON.stringify(error));
+        });
+    });
 
 });
 
@@ -501,6 +579,53 @@ var sorta = function( notea, noteb ) {
     } else {
       return 0;
     }
+}
+
+var addToBook = function(regid) {
+    $("#modal-book").modal("show");
+    addbook.onsubmit = function(e) {
+       var form = document.forms.edit;
+       var regionId = regid;
+       var order = -1;
+       var counter = 0;
+       e.preventDefault();
+       Object.keys(wavesurfer.regions.list).map(function(id) {
+          ++counter;
+          if ( regionId === id ) order=counter+4096;
+       });
+       var oldbook = $('#oldbook').val();
+       var newbook = $('#newbook').val();
+       if ( newbook === '' && oldbook === 'none' )
+       {
+          alertify.alert( "Please, choose an existing book or create a new one!" );
+          return;
+       }
+       $('.lds-spinner').css('display','block');
+       var jqxhr = $.post( {
+          url: '../../add-to-book.php',
+          data: {
+             oldbook: fullEncode(oldbook),
+             newbook: fullEncode(newbook),
+             order: order,
+             user: user,
+             source: fullEncode(soundfile),
+          },
+          dataType: 'application/json'
+       }, function() {
+          console.log( "add to book succeeded" );
+          $('.lds-spinner').css('display','none');
+          $("#modal-book").modal("hide");
+       }).fail(function(error) {
+          $('.lds-spinner').css('display','none');
+          $("#modal-book").modal("hide");
+          if ( error.status === 200 ) {
+             console.log( "add to book success");
+          } else {
+             console.log( "adding to book failed : " + JSON.stringify(error));
+             alertify.alert( "Adding to book failed : " + error.statusText );
+          }
+        });
+    };
 }
 
 var playRegion = function(regid) {

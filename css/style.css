@@ -82,16 +82,26 @@ body {
 
 .linear-outer-notes {
     display: table;
-    float: left;
     width: 80%; 
-    height: 80%; 
+    height: 800px; 
     margin-left: 10%; 
     border: 1px solid #dddddd; 
+}
+
+.linear-bar {
+    display: table;
+    width: 100%; 
 }
 
 .linear-play {
     float: right;
     margin-right: 5px; 
+    margin-top: -15px; 
+}
+
+.linear-book {
+    float: right;
+    margin-right: 25px; 
     margin-top: -15px; 
 }
 

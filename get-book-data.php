@@ -31,7 +31,15 @@ else
     while ($row = mysqli_fetch_row($result))
     {
       $list[$counter]['title']= urldecode($row[0]);
-      $list[$counter]['note']= convert_html_to_text($row[1]);
+      $fnote = convert_html_to_text($row[1]);
+      if ( $fnote[2] == ':' )
+      {
+         $list[$counter]['note']= substr(substr($fnote,3),0,40)."...";
+      } 
+      else
+      {
+         $list[$counter]['note']= substr($fnote,0,40)."...";
+      }
       $list[$counter++]['order']= $row[2];
     }
     echo json_encode($list);

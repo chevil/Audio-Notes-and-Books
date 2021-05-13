@@ -5,7 +5,7 @@ var wavesurfer;
 var wzoom;
 var wspeed=1.0;
 var evid;
-var sevid;
+var svid;
 var currentRegion;
 var soundfile = '__file_url__';
 

@@ -65,8 +65,15 @@ else
    while ($row=mysqli_fetch_row($resultdb))
    {
      $excerpt_id="anno_".$row[5];
-     $excerpt_title=convert_html_to_text($row[1]);
-     $excerpt_title=ellipse($excerpt_title,40);
+     $fnote = convert_html_to_text($row[1]);
+     if ( $fnote[2] == ':' )
+     {
+       $excerpt_title= substr(substr($fnote,3),0,40)."...";
+     }
+     else
+     {
+       $excerpt_title= substr($fnote,0,40)."...";
+     }
      $excerpt_source=basename(urldecode($row[3]));
      // copy excerpt
      if ( ( $result=exec("cp '".$row[4]."' 'audiobooks/".$dtitle."'; echo $?") ) != 0 )
