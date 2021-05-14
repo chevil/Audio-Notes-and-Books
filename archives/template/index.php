@@ -37,7 +37,7 @@ if ( !isset($_SESSION['schtroumpf']) || !isset($_SESSION['papa']) )
     </head>
 
     <body background="../../img/background.png">
-    <a href="../../index.php"><i class="fa fa-chevron-left fa-2x" aria-hidden="true" style="color: #000000; float:left; margin-left:20px; margin-top:-15px;" ></i></a>
+    <a href="../../index.php"><i class="fa fa-chevron-left fa-1x" aria-hidden="true" style="color: #000000; float:left; margin-left:20px; margin-top:-15px;" ></i></a>
 
         <center>
         <button id="biography" class="tablinks" onclick="openTab('Biography')">Biography</button>

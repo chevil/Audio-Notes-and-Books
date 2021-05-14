@@ -40,7 +40,7 @@ if ( empty($_GET['user']) )
 $user=$_GET['user'];
 
 error_log("Wave Surfer : Calling : ./create-archive.sh '".urldecode($file)."'");
-if ( strstr( $result=exec("./create-archive.sh '".urldecode($file)."'"), "ERR:" ) )
+if ( strstr( $result=exec("./create-archive.sh \"".urldecode($file)."\""), "ERR:" ) )
 {
    print( $result );
    exit(-1);

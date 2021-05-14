@@ -2,6 +2,16 @@
 include("config.php");
 include("functions.php");
 
+
+if ( $_SERVER[SERVER_PORT] == 80 )
+{
+   $servroot = "https://$_SERVER[HTTP_HOST]";
+}
+else
+{
+   $servroot = "https://$_SERVER[HTTP_HOST]:$_SERVER[SERVER_PORT]";
+}
+
 session_start();
 
 if ( isset( $_GET['search'] ) )
@@ -118,8 +128,7 @@ else
     }
 
     function getBook(title) {
-       title = title.replace(/%27/g,"'");
-       $.post( "gen-book.php", { title: encodeURIComponent(title), }, function(data) {
+       $.post( "gen-book.php", { title: encodeURIComponent(title).replace(/'/g,"%27"), }, function(data) {
          if ( data.indexOf("ERR:") < 0 )
          {
             alertify.alert( "The book has been generated.",
@@ -151,8 +160,8 @@ else
        });
        neworder=neworder.substr(0,neworder.lastIndexOf(","));
        console.log(neworder);
-       $.post( "update-book.php", { title: encodeURIComponent(title), 
-                                    otitle: encodeURIComponent(otitle),
+       $.post( "update-book.php", { title: encodeURIComponent(title).replace(/'/g,"%27"), 
+                                    otitle: encodeURIComponent(otitle).replace(/'/g,"%27"),
                                     order: neworder }, function(data) {
          if ( data.indexOf("ERR:") < 0 )
          {
@@ -173,8 +182,7 @@ else
     }
 
     function editBook(title) {
-       title = title.replace(/%27/g,"'");
-       $.post( "get-book-data.php", { title: encodeURIComponent(title) }, function(data) {
+       $.post( "get-book-data.php", { title: encodeURIComponent(title).replace(/'/g,"%27") }, function(data) {
         if ( data.indexOf("ERR:") < 0 )
         {
           contents = JSON.parse(data);
@@ -202,12 +210,11 @@ else
     }
 
     function deleteBook(title) {
-       title = title.replace(/%27/g,"'");
        alertify.confirm( "Are you sure that you want to delete this book?",
          function (e) {
            if (e) 
            {
-              $.post( "delete-book.php", { title: encodeURIComponent(title), user: '<?php echo $_SESSION['schtroumpf']; ?>' }, function(data) {
+              $.post( "delete-book.php", { title: encodeURIComponent(title).replace(/'/g,"%27"), user: '<?php echo $_SESSION['schtroumpf']; ?>' }, function(data) {
                 if ( data == "OK" )
                 {
                   alertify.alert( "The book has been deleted.",
@@ -233,7 +240,7 @@ else
 </head>
 
 <body background="img/background.png">
-<a href="./index.php"><img src="img/back.png" width=40px height=40px /></a>
+<a href="./index.php"><i class="fa fa-chevron-left fa-1x" aria-hidden="true" style="color: #000000; float:left; margin-left:20px;" ></i></a>
 
 <center><table width=40%>
 <tr><td align=right>
@@ -281,15 +288,16 @@ while ( $page < $nbpages )
 <?php
 
 $count = $start+1;
-print "<th align=left>Title</th><th align=left>Creator</th><th align=center>Edit</th><th align=center>Delete</th><th align=center>Generate</th>";
+print "<th align=left>Title</th><th align=left>Creator</th><th align=center>Edit</th><th align=center>Listen</th><th align=center>Generate</th><th align=center>Delete</th>";
 while ( $rowbook = mysqli_fetch_row( $respagebooks) )
 {
-   $htitle = preg_replace('/\'/','%27', $rowbook[0] );
+   $htitle=$rowbook[0];
    print "<tr><td align=left>".urldecode($rowbook[0])."</td>";
    print "<td align=left>".$rowbook[2]."</td>";
    print "<td align=center><a href='javascript:editBook(\"".$htitle."\");'><img src='img/edit.png' width=20px height=20px /></a></td>";
-   print "<td align=center><a href='javascript:deleteBook(\"".$htitle."\");'><img src='img/delete.png' width=20px height=20px /></a></td>";
+   print "<td align=center><a href='".$servroot.dirname($_SERVER['SCRIPT_NAME'])."/audiobooks/".$htitle."/listen.php'><img src='img/ear.png' width=20px height=20px /></a></td>";
    print "<td align=center><a href='javascript:getBook(\"".$htitle."\");'><img src='img/generate.png' width=20px height=20px /></a></td>";
+   print "<td align=center><a href='javascript:deleteBook(\"".$htitle."\");'><img src='img/delete.png' width=20px height=20px /></a></td>";
    print "</tr>";
    $count++;
 }

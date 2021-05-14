@@ -128,7 +128,7 @@ else
 </head>
 
 <body background="img/background.png">
-<a href="./index.php"><img src="img/back.png" width=40px height=40px /></a>
+<a href="./index.php"><i class="fa fa-chevron-left fa-1x" aria-hidden="true" style="color: #000000; float:left; margin-left:20px;" ></i></a>
 
 <center><table width=40%>
 <tr><td align=right>
@@ -176,7 +176,7 @@ while ( $page < $nbpages )
 <?php
 
 $count = $start+1;
-print "<th align=left>Author</th><th align=left>Title</th><th align=left>Genre / Collection</th><th align=left>Date</th><th align=left>Creator</th><th align=center>Edit</th><th align=center>Delete</th><th align=center>Notes</th>";
+print "<th align=left>Author</th><th align=left>Title</th><th align=left>Genre / Collection</th><th align=left>Date</th><th align=left>Creator</th><th align=center>Edit</th><th align=center>Notes</th><th align=center>Delete</th>";
 while ( $rowuser = mysqli_fetch_row( $respageusers) )
 {
    print "<tr><td align=left>".$rowuser[3]."</td>";
@@ -185,8 +185,8 @@ while ( $rowuser = mysqli_fetch_row( $respageusers) )
    print "<td align=left>".$rowuser[6]."</td>";
    print "<td align=left>".$rowuser[7]."</td>";
    print "<td align=center><a href='javascript:editArchive(".$rowuser[0].");'><img src='img/edit.png' width=20px height=20px /></a></td>";
-   print "<td align=center><a href='javascript:deleteArchive(".$rowuser[0].");'><img src='img/delete.png' width=20px height=20px /></a></td>";
    print "<td align=center><a href='".$servroot.dirname($_SERVER['SCRIPT_NAME'])."/".htmlentities($rowuser[1], ENT_QUOTES)."'><img src='img/see.png' width=20px height=20px /></a></td>";
+   print "<td align=center><a href='javascript:deleteArchive(".$rowuser[0].");'><img src='img/delete.png' width=20px height=20px /></a></td>";
    print "</tr>";
    $count++;
 }

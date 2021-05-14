@@ -19,17 +19,8 @@ else
     $title=$_POST['title'];
 }
 
-$dtitle = preg_replace('/ /','-',urldecode($title));
-$dtitle = preg_replace("/[^A-Za-z0-9éèàçêôûù]/", '', $dtitle);
-if ( ( $result=exec("rm -rf 'audiobooks/".$dtitle."'; echo $?") ) != 0 )
-{
-   error_log("ERR: Could not erase directory.");
-}
-
-if ( ( $result=exec("mkdir 'audiobooks/".$dtitle."'; echo $?") ) != 0 )
-{
-   die("ERR: Could not create directory.");
-}
+$dirname = preg_replace('/ /','-',urldecode($title));
+// $dirname = preg_replace("/[^A-Za-z0-9\'éèêàâçôûù]/", '', $dirname);
 
 if (!$ncc_header=file_get_contents("audiobooks/template/ncc-header.html"))
 {
@@ -76,7 +67,7 @@ else
      }
      $excerpt_source=basename(urldecode($row[3]));
      // copy excerpt
-     if ( ( $result=exec("cp '".$row[4]."' 'audiobooks/".$dtitle."'; echo $?") ) != 0 )
+     if ( ( $result=exec("cp '".$row[4]."' 'audiobooks/".$dirname."'; echo $?") ) != 0 )
      {
        die("ERR: Could not copy samples.");
      }
@@ -96,7 +87,7 @@ else
      $e_excerpt_smil = preg_replace( "/__excerpt_id__/", $excerpt_id, $e_excerpt_smil );
      $e_excerpt_smil = preg_replace( "/__excerpt_title__/", $excerpt_title, $e_excerpt_smil );
      $e_excerpt_smil = preg_replace( "/__excerpt_source__/", $excerpt_source, $e_excerpt_smil );
-     if (!$result=file_put_contents("audiobooks/".$dtitle."/".$excerpt_id.".smil", $e_excerpt_smil))
+     if (!$result=file_put_contents("audiobooks/".$dirname."/".$excerpt_id.".smil", $e_excerpt_smil))
      {
         die("ERR: Could not create sample file.");
      }
@@ -116,7 +107,7 @@ else
    $hour = round( $ttime/3600 );
    $min = round( ($ttime-$hour*3600) / 60 );
    $sec = round( $ttime-$hour*3600-$min*60 );
-   if ( ( $esize=exec("du -b 'audiobooks/".$dtitle."' | cut -f1") ) < 0 )  
+   if ( ( $esize=exec("du -b 'audiobooks/".$dirname."' | cut -f1") ) < 0 )  
    {
        die("ERR: Could not get book size.");
    }
@@ -127,27 +118,27 @@ else
    $ncc_header = preg_replace( "/__book_nb_excerpts__/", ($counter-1), $ncc_header );
    $ncc_header = preg_replace( "/__book_duration__/", sprintf("%02d:%02d:%02d", $hour, $min, $sec ), $ncc_header );
    $ncc_header = preg_replace( "/__book_size__/", $esize, $ncc_header );
-   if (!$result=file_put_contents("audiobooks/".$dtitle."/ncc.html", $ncc_header))
+   if (!$result=file_put_contents("audiobooks/".$dirname."/ncc.html", $ncc_header))
    {
       die("ERR: Could not create book description.");
    }
 
-   if (!$result=file_put_contents("audiobooks/".$dtitle."/ncc.html", $a_excerpt_html, FILE_APPEND))
+   if (!$result=file_put_contents("audiobooks/".$dirname."/ncc.html", $a_excerpt_html, FILE_APPEND))
    {
       die("ERR: Could not create book description.");
    }
 
-   if (!$result=file_put_contents("audiobooks/".$dtitle."/ncc.html", $ncc_footer, FILE_APPEND))
+   if (!$result=file_put_contents("audiobooks/".$dirname."/ncc.html", $ncc_footer, FILE_APPEND))
    {
       die("ERR: Could not create book description.");
    }
 
-   if ( ( $result=exec("cd audiobooks; zip -r ".$dtitle.".zip ".$dtitle."; echo $?") ) < 0 )  
+   if ( ( $result=exec("cd audiobooks; zip -r \"".$dirname.".zip\" \"".$dirname."\"; echo $?") ) < 0 )  
    {
        die("ERR: Could not compress book.");
    }
 
-   print "audiobooks/".$dtitle.".zip";
+   print "audiobooks/".$dirname.".zip";
 }
 
 ?>

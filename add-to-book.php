@@ -76,7 +76,9 @@ include("config.php");
      }
      // generate the audio file
      $duration = $end - $start;
-     $cmd = "./create-excerpt.sh ".$start." ".$duration." '".urldecode($source)."' '".$excerpt."' 2>/dev/null";
+     $dirname = preg_replace('/ /','-',urldecode($book));
+     // $dirname = preg_replace("/[^A-Za-z0-9\'éèêàâçôûù]/", '', $dirname);
+     $cmd = "./create-excerpt.sh ".$start." ".$duration." \"".urldecode($source)."\" \"".$excerpt."\" \"".$dirname."\" 2>/dev/null";
      error_log($cmd);
      if ( strstr( $result=exec($cmd), "ERR:" ) )
      {

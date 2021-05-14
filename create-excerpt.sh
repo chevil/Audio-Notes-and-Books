@@ -1,9 +1,13 @@
 #!/bin/bash
 
-if [ $# -ne 4 ]; then
-   echo "ERR: Usage: $0 <start> <duration> <infile> <outfile>"
+#set -x 
+
+if [ $# -ne 5 ]; then
+   echo "ERR: Usage: $0 <start> <duration> <infile> <outfile> <book>"
    exit 1
 fi
+
+book=$5
 
 tmpfile=`tempfile`
 #echo -n "Downloading to $tmpfile..." 1>&2
@@ -19,7 +23,7 @@ fi
 
 cmd="ffmpeg -y -ss $1 -t $2 -i $tmpfile $4"
 echo $cmd 1>&2
-exec $cmd
+$cmd
 if [ $? -ne 0 ]
 then
    /bin/rm $tmpfile
@@ -28,4 +32,14 @@ then
 fi
 
 /bin/rm $tmpfile
+
+# generate an empty book from an audiobook template
+# echo "creating book : $book" >2
+if [ ! -f "audiobooks/$book" ]
+then
+    cp -rf audiobooks/template "audiobooks/$book"
+    chmod -R 777 "audiobooks/$book"
+    sed -i "s#__title__#$book#g" "audiobooks/$book/listen.php"
+fi
+
 echo "OK"

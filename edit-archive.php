@@ -92,7 +92,7 @@ else
 </head>
 
 <body background="img/background.png">
-<a href="./manage-archives.php"><img src="img/back.png" width=40px height=40px /></a>
+<a href="./index.php"><i class="fa fa-chevron-left fa-1x" aria-hidden="true" style="color: #000000; float:left; margin-left:20px;" ></i></a>
 
 <center><table width=40%>
 <tr><td align=right>
