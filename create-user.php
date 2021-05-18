@@ -27,6 +27,8 @@ if ( !isset($_SESSION['schtroumpf']) || !isset($_SESSION['papa']) || ($_SESSION[
                    -moz-border-radius: 10px; border-radius: 10px; background : lightgrey }
   </style>
 
+  <link rel="stylesheet" href="css/font-awesome.min.css" />
+
   <script src="js/jquery.min.js"></script>
 
   <script type="text/javascript">

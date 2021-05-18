@@ -29,6 +29,7 @@ if ( !isset($_SESSION['schtroumpf']) || !isset($_SESSION['papa']) )
   <link rel="stylesheet" href="css/spinner.css" />
   <link href="css/alertify.core.css" rel="stylesheet">
   <link href="css/alertify.default.css" rel="stylesheet">
+  <link rel="stylesheet" href="css/font-awesome.min.css" />
 
   <script src="js/jquery.min.js"></script>
   <script src="js/alertify.min.js"></script>

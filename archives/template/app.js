@@ -9,6 +9,17 @@ var svid;
 var currentRegion;
 var soundfile = '__file_url__';
 
+var strstr = function (haystack, needle) {
+  if (needle.length === 0) return 0;
+  if (needle === haystack) return 0;
+  for (let i = 0; i <= haystack.length - needle.length; i++) {
+    if (needle === haystack.substring(i, i + needle.length)) {
+      return i;
+    }
+  }
+  return -1;
+};
+
 var fullEncode = function(w)
 {
  var map=
@@ -590,7 +601,7 @@ function randomColor(alpha) {
 }
 
 /**
- * When a region is cliked, pass the click to the waveform.
+ * When a region is clicked, pass the click to the waveform.
  */
 function propagateClick(region, e) {
     var clickEvent = new MouseEvent("click", {
@@ -746,15 +757,36 @@ var playAt = function(position) {
 }
 
 window.GLOBAL_ACTIONS['export'] = function() {
+
     anotes = JSON.parse(localStorage.regions);
+    anotes = anotes.sort(sorta);
     if ( anotes.length === 0 )
     {
        alertify.alert( "There is nothing to export!" );
        return;
     }
-    window.open("./annotations.json",
-                document.querySelector('#title').innerHTML.toString(),
-                "menubar=yes");
+    var subtitles = '';
+    var counter = 1;
+    anotes.forEach( function(note, index) {
+       subtitles += counter+'\n';
+       counter++;
+       subtitles += toHHMMSS(note.start)+' --> '+toHHMMSS(note.end)+'\n';
+       var lines = note.data.note.split("\n");
+       lines.forEach( function( line, index ) {
+           subtitles += $('<div>').html(line).text()+'\n';
+       });
+       subtitles += '\n';
+    });
+
+    // force subtitles download
+    var element = document.createElement('a');
+    var filename = $("#title").html().toString().substring(8)+'-free.srt';
+    element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(subtitles));
+    element.setAttribute('download', filename);
+    element.style.display = 'none';
+    document.body.appendChild(element);
+    element.click();
+    document.body.removeChild(element);
 };
 
 var playRegion = function(regid) {
