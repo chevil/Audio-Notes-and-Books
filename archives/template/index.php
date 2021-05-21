@@ -16,7 +16,6 @@ if ( !isset($_SESSION['schtroumpf']) || !isset($_SESSION['papa']) )
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
         <title>__title__</title>
 
-        <!-- Bootstrap -->
         <link rel="stylesheet" href="../../css/bootstrap.min.css">
         <link rel="stylesheet" href="../../css/style.css" />
         <link rel="stylesheet" href="../../css/alertify.core.css" />
@@ -25,6 +24,7 @@ if ( !isset($_SESSION['schtroumpf']) || !isset($_SESSION['papa']) )
         <link rel="stylesheet" href="../../css/tabs.css" />
         <link rel="stylesheet" href="../../css/app.css" />
         <link rel="stylesheet" href="../../css/font-awesome.min.css" />
+        <link rel="stylesheet" href="../../css/dropzone.css" />
 
         <script type="text/javascript" src="../../js/jquery.min.js"></script>
         <script type="text/javascript" src="../../js/bootstrap.min.js"></script> 
@@ -32,6 +32,7 @@ if ( !isset($_SESSION['schtroumpf']) || !isset($_SESSION['papa']) )
         <script type="text/javascript" src="../../js/trivia.js"></script>
         <script type="text/javascript" src="../../js/alertify.min.js"></script>
         <script type="text/javascript" src="../../js/circular-json.js"></script>
+        <script type="text/javascript" src="../../js/dropzone.min.js"></script>
         <script type="text/javascript" src="https://cdn.tiny.cloud/1/fsisf6nug1vh20mrqte7djkhpu0j1umti1udbihiykd71g9w/tinymce/5/tinymce.min.js" referrerpolicy="origin"></script>
 
     </head>
@@ -69,14 +70,27 @@ if ( !isset($_SESSION['schtroumpf']) || !isset($_SESSION['papa']) )
             </div>
 
             <div id="Documents" class="tabcontent">
-                <h3>Documents</h3>
+                <div class="upload-header" id="upload-header">
+                   <center><h3>Documents</h3></center>
+                   <i class="fa fa-upload fa-2x upload-button" aria-hidden="true" onclick="showUpload()"></i>
+                   <div class="upload-content" id="upload-content">
+                </div>
+                <div class="modal fade" id="modal-upload"  role="dialog">
+                    <div class="modal-dialog modal-udialog">
+                        <center><b>Upload Documents</b></center>
+                        <div class="modal-content modal-ucontent">
+                           <form id="upload-zone" class="dropzone">
+                              <input name="title" type="hidden" value="__title__"/>
+                           </form>
+                        </div>
+                    </div>
+                </div>
             </div>
 
         </div>
     </body>
 
 <script type="text/javascript">
-
 
 var openTab = function(name) {
   $(".tabcontent").css("display","none");
@@ -85,7 +99,7 @@ var openTab = function(name) {
   $("#"+name.toLowerCase()).addClass("active");
 } 
 
-function getParameterByName(name) {
+var getParameterByName = function(name) {
     var url = window.location.href;
     name = name.replace(/[\[\]]/g, '\\$&');
     var regex = new RegExp('[?&]' + name + '(=([^&#]*)|&|#|$)'),
@@ -95,12 +109,103 @@ function getParameterByName(name) {
     return decodeURIComponent(results[2].replace(/\+/g, ' '));
 }
 
+var fullEncode = function(w)
+{
+ var map=
+ {
+          '&': '%26',
+          '<': '%3c',
+          '>': '%3e',
+          '"': '%22',
+          "'": '%27'
+ };
+
+ var encodedW = encodeURI(w);
+ return encodedW.replace(/[&<>"']/g, function(m) { return map[m];});
+}
+
 var sstart = getParameterByName( "start" );
 var user = '<?php echo $_SESSION['schtroumpf']; ?>';
 var ucolor = '<?php echo $_SESSION['color']; ?>';
 
+Dropzone.autoDiscover = false;
+
+var showUpload = function() {
+    $("#modal-upload").modal("show");
+} 
+
+var HRSize = function(bytes, si=false, dp=1) {
+  const thresh = si ? 1000 : 1024;
+  if (Math.abs(bytes) < thresh) {
+    return bytes + ' B';
+  }
+  const units = si 
+    ? ['kB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB'] 
+    : ['KiB', 'MiB', 'GiB', 'TiB', 'PiB', 'EiB', 'ZiB', 'YiB'];
+  let u = -1;
+  const r = 10**dp;
+  do {
+    bytes /= thresh;
+    ++u;
+  } while (Math.round(Math.abs(bytes) * r) / r >= thresh && u < units.length - 1);
+  return bytes.toFixed(dp) + ' ' + units[u];
+}
+
+var getUploads = function() {
+    var jqxhr = $.post( {
+       url: '../../get-uploads.php',
+       data: {
+          title: $(document).attr('title'),
+       },
+       dataType: "application/json" 
+    }, function(data) {
+       console.log("got uploads : " + JSON.stringify(data.responseText));
+    }).fail(function(data) {
+       if ( data.status === 200 ) {
+         // console.log( "got uploads : " + JSON.stringify(data));
+         var uploads = JSON.parse(data.responseText);
+         if ( uploads == null ) {
+           $("#upload-content").html("<br/><br/><br/><center>No documents have been uploaded.</center>");
+         } else {
+           $("#upload-content").html("");
+           $tabhtml = "<table border=2px width=100%>";
+           $tabhtml += "<tr><th>Name</th><th>Type</th><th>Size</th><th>Download</th><th>Delete</th></tr>";
+           $.each(uploads, function (id, upload) {
+              $tabhtml += "<tr><td>"+upload['uri'].replaceAll("uploads/","")+
+                          "</td><td>"+upload['type']+
+                           "</td><td>"+HRSize(upload['size'])+"</td>"+ 
+                           "</td><td><a href='../../"+fullEncode(upload['uri'])+"' target='_blank'><center><i class='fa fa-download fa-1x'></i></center></a></td>"+
+                           "</td><td><a href='javascript:deleteUpload(\""+fullEncode(upload['uri'])+"\")'><center><i class='fa fa-trash-o fa-1x'></i></center></a></td></tr>";
+           });
+           $tabhtml += "</table>";
+           $("#upload-content").html($tabhtml);
+         }
+       } else {
+         alertify.alert("Couldn't get documents : " + data.responseText );
+       }
+    });
+}
+
+var deleteUpload = function(uri) {
+    var jqxhr = $.post( {
+       url: '../../delete-upload.php',
+       data: {
+          uri: uri,
+       },
+       dataType: "text/html" 
+    }, function(data) {
+       console.log("delete returned : " + JSON.stringify(data));
+    }).fail(function(data) {
+       if ( data.status === 200 ) {
+         alertify.alert("The document has been deleted.");
+         getUploads();
+       } else {
+         alertify.alert("Couldn't delete document : " + data.responseText );
+       }
+    });
+}
+
 $(document).ready( function(){
-    openTab("Free");
 
     var jqxhr = $.post( {
        url: '../../get-biography.php',
@@ -110,7 +215,7 @@ $(document).ready( function(){
        dataType: "text/html" 
     }).fail(function(data) {
        if ( data.status === 200 ) {
-          console.log( "getting biography success : " + data.responseText );
+          // console.log( "getting biography success : " + data.responseText );
           $('#biography-edit').html(data.responseText);
           tinymce.init({
             setup:function(ed) {
@@ -170,7 +275,7 @@ $(document).ready( function(){
        dataType: "text/html" 
     }).fail(function(data) {
        if ( data.status === 200 ) {
-          console.log( "getting description success : " + data.responseText );
+          // console.log( "getting description success : " + data.responseText );
           $('#description-edit').html(data.responseText);
           tinymce.init({
             setup:function(ed) {
@@ -222,6 +327,23 @@ $(document).ready( function(){
        }
     });
 
+    $("#upload-zone").dropzone( {
+        url: "../../upload-document.php",
+        method: "post",
+        paramName: "file", // The name that will be used to transfer the file
+        addRemoveLinks: false,
+        maxFilesize: 100, // MB
+        dictDefaultMessage: "Upload Document",
+        init: function() {
+             this.on("success", function(file, response) { 
+                 getUploads();
+             });
+        }
+    });
+
+    openTab("Free");
+
+    getUploads();
 });
 
 </script>

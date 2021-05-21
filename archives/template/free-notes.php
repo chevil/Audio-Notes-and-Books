@@ -70,9 +70,9 @@ while ( $rowsetting = mysqli_fetch_array( $ressettings) )
 
         <div class="modal fade" id="modal-help" role="dialog">
             <div class="modal-dialog modal-hdialog">
+                <center><h3>Mini help</h3></center>
                 <div class="modal-content modal-hcontent">
                     <p>
-                    <center><b>Mini help :</b></center><br />
                      Select a part of the file to create a region.<br /><br />
                      Double Click on a region to play it and enter a transcription or an annotation.<br /><br />
                      To resume playing the file normally, close the annotation form.<br /><br />
@@ -114,7 +114,7 @@ while ( $rowsetting = mysqli_fetch_array( $ressettings) )
                 <div id="wave-minimap"></div>
                 <div class="modal fade" id="modal-form" role="dialog">
                   <div class="modal-dialog">
-                    <center><b>Edit Note</b>
+                    <center><h3>Edit Note</h3>
                     <div id="audiobook-div"><i id="audiobook" class="fa fa-book fa-2x" width="30px" height="30px" /></i></div>
                     <div class="modal-content">
                       <center>
@@ -135,7 +135,7 @@ while ( $rowsetting = mysqli_fetch_array( $ressettings) )
 
                 <div class="modal fade" id="modal-book" role="dialog">
                   <div class="modal-dialog modal-bdialog">
-                    <center><b>Add to audiobook</b></center><br/>
+                    <center><h3>Add to audiobook</h3></center><br/>
                     <div class="modal-content modal-bcontent">
                       <center>
                          <div class="lds-spinner"><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div></div>

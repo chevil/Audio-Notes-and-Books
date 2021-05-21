@@ -68,9 +68,9 @@ while ( $rowsetting = mysqli_fetch_array( $ressettings) )
 
         <div class="modal fade" id="modal-help" role="dialog">
             <div class="modal-dialog modal-hdialog">
+                <center><h3>Mini help</h3></center>
                 <div class="modal-content modal-hcontent">
                     <p>
-                    <center><b>Mini help :</b></center><br />
                      In this mode, the archive is automatically divided in sections divided by silence.<br /><br />
                      You can enter a note for each section below. The note will show up when file is played.<br /><br />
                      If you want to translate to different languages, you have to start your line with the abbreviation of the language. For example : "en: This conference tackles the issue of ..."<br /><br />
