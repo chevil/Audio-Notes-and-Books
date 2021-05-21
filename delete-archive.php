@@ -22,6 +22,17 @@ $query = "DELETE FROM archive WHERE id=".$id.";";
 $delres=db_query($query);
 if ( $delres == true)
 {
+   // print "OK";
+}
+else
+{
+   print "ERR: Delete Error";
+}
+
+$query = "DELETE FROM upload WHERE aid=".$id.";";
+$delres=db_query($query);
+if ( $delres == true)
+{
    print "OK";
 }
 else

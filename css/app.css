@@ -11,6 +11,22 @@ overview {
   border: 2px solid rgb(0, 0, 0);
 }
 
+.upload-zone {
+  height: 500px;
+}
+
+.upload-content {
+  height: 500px;
+  overflow: auto;
+  border: solid 1px rgba(0, 0, 0, 0.3);
+}
+
+.upload-button {
+  float: right;
+  margin-right: 20px;
+  margin-top: -40px;
+}
+
 .media-button {
   margin-left: 50px;
   margin-right: 50px;
@@ -32,15 +48,15 @@ overview {
 .modal-dialog {
   background:#ffffff;
   border-radius:6px;
-  height:550px;
+  height:500px;
 }
 
 .modal-bdialog {
-  height:350px;
+  height:300px;
 }
 
 .modal-hdialog {
-  height:280px;
+  height:350px;
   padding-top:10px;
 }
 
@@ -48,13 +64,17 @@ overview {
   background:#ffffff;
   border-radius:6px;
   padding-top:10px;
-  height:545px;
+  height:500px;
+}
+
+.modal-udialog {
+  height:550px;
 }
 
 .modal-content {
   padding:20px;
   margin:10px;
-  height:500px;
+  height:450px;
   width:560px;
   overflow:auto;
 }
@@ -62,7 +82,7 @@ overview {
 .modal-bcontent {
   padding:30px;
   margin:20px;
-  height:300px;
+  height:230px;
   margin-top:-10px;
 }
 
@@ -73,8 +93,15 @@ overview {
   margin:auto;
 }
 
+.modal-ucontent {
+  padding:30px;
+  height:500px;
+  overflow-y: auto;
+  margin:auto;
+}
+
 .modal-fcontent {
-  height:520px;
+  height:475px;
   padding:20px;
   margin:auto;
 }

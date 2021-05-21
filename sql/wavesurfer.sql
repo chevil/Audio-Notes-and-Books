@@ -136,6 +136,19 @@ INSERT INTO `settings` (name, value) VALUES ('mapProgressColor','#222222');
 /*!40000 ALTER TABLE `user` ENABLE KEYS */;
 UNLOCK TABLES;
 
+DROP TABLE IF EXISTS `upload`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `upload` (
+  `id` bigint NOT NULL AUTO_INCREMENT,
+  `aid` bigint NOT NULL DEFAULT -1,
+  `uri` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin,
+  `size` bigint NOT NULL DEFAULT '-1',
+  `type` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin,
+  PRIMARY KEY (`id`)
+) ENGINE=MyISAM AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
 /*!40014 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS */;
