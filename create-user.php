@@ -73,6 +73,10 @@ Unknown
 </td</tr>
 </table></center>
 
+<center>
+<h1>Create User</h1>
+</center>
+
 <?php if (isset($_SESSION['schtroumpf']) && isset($_SESSION['papa']) )
 {
 print "

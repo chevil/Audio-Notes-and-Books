@@ -86,6 +86,10 @@ if ( !isset($_SESSION['schtroumpf']) || !isset($_SESSION['papa']) )
 </td</tr>
 </table></center>
 
+<center>
+<h1>Create Archive</h1>
+</center>
+
 <?php
 print "
 <form action='javascript:doCreateArchive()' id='createform' name='createform' action=post>
