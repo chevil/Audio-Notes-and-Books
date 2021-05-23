@@ -1,5 +1,12 @@
 #!/bin/bash
 
+#set -x
+
+strstr() {
+  [ "${1#*$2*}" = "$1" ] && echo "0"
+  echo "1"
+}
+
 if [ $# -ne 1 ]; then
    echo "ERR: Usage: $0 <file_url>"
    exit 1
@@ -16,6 +23,16 @@ then
    exit -1
 fi
 echo "done." 1>&2
+
+mimetype=`/usr/bin/mimetype --output-format %m $tmpfile`
+echo $mimetype 1>&2
+echo  ${mimetype#*audio*} 1>&2
+if [ ${mimetype#*audio*} = $mimetype ]
+then
+  /bin/rm $tmpfile
+  echo "ERR: This url is not an audio archive, please !!!"
+  exit -1
+fi
 
 artist=`/usr/bin/ffprobe $tmpfile 2>&1 | grep -iw -m1 artist | cut -f2 -d':' | sed 's/ //g' -`
 sartist=`/usr/bin/ffprobe $tmpfile 2>&1 | grep -iw -m1 artist | cut -f2 -d':'`

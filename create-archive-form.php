@@ -51,6 +51,7 @@ if ( !isset($_SESSION['schtroumpf']) || !isset($_SESSION['papa']) )
           $('#error-zone').css({background:'red'});
           $('#error-zone').html(data.replace("ERR: ",""));
           $('#error-zone').animate({ opacity : 1.0 },{queue:false,duration:1000});
+          $('#create').prop('disabled', false);
         }
         else
         {
@@ -58,9 +59,10 @@ if ( !isset($_SESSION['schtroumpf']) || !isset($_SESSION['papa']) )
         }
        })
        .fail(function() {
-        $('#error-zone').css({background:'red'});
-        $('#error-zone').html("Archive creation error");
-        $('#error-zone').animate({ opacity : 1.0 },{queue:false,duration:1000});
+          $('#error-zone').css({background:'red'});
+          $('#error-zone').html("Archive creation error");
+          $('#error-zone').animate({ opacity : 1.0 },{queue:false,duration:1000});
+          $('#create').prop('disabled', false);
        });
     }
 

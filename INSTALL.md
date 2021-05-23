@@ -18,7 +18,7 @@ to process audio within the browser.
   with php modules : 
   php-mbstring and php-xml
 
-* ffmpeg, ffprobe
+* ffmpeg, ffprobe, mimetype from libfile-mimeinfo-perl
 
 * zip
 
