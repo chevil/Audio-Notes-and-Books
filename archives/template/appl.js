@@ -224,7 +224,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 url: 'annotations-linear.json'
             }, function(data) {
 
-                if (data) console.log( "got annotations : " + data.length );
+                if (data) console.log( "got linear annotations : " + data.length );
                 if ( data.length > 0 )
                    regions = data;
                 else
@@ -258,7 +258,7 @@ document.addEventListener('DOMContentLoaded', function() {
                    // console.log( wregion.id );
                    var blank = "<br/><br/><div class='linear-bar' id='bar-"+wregion.id+"'>";
                    $("#linear-notes").append(blank);
-                   var range = "<p>"+toHHMMSS(region.start)+" - "+toHHMMSS(region.end)+" : </p>";
+                   var range = "<p>"+toHHMMSS(region.start)+" - "+toHHMMSS(region.end)+" (" + Math.round(region.end-region.start) + " s) : </p>";
                    $("#bar-"+wregion.id).append(range);
                    var rbook = "<i class='fa fa-book fa-1x linear-book' id='b"+wregion.id+"' onclick='addToBook(\""+wregion.id+"\")'></i>";
                    $("#bar-"+wregion.id).append(rbook);
@@ -298,7 +298,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 $('#svalue').html(("x"+wspeed).substring(0,4));
 
             }).fail(function(error) {
-                console.log( "couldn't load aanotaions : " + JSON.stringify(error) );
+                console.log( "couldn't load annotations : " + JSON.stringify(error) );
             });
         }); // ready
 
@@ -445,7 +445,7 @@ function saveRegions() {
             };
         })
     );
-    // console.log( "saving : " + (counter-4096) + " annotations (linear)" );
+    console.log( "saving : " + (counter-4096) + " linear annotations" );
 
     anotes = JSON.parse(localStorage.regions);
     var jqxhr = $.post( {
@@ -480,12 +480,15 @@ function loadRegions(regions) {
  */
 function extractRegions(peaks, duration) {
     // Silence params
-    var minValue = 0.015;
-    var minSeconds = 0.25;
+    var minValue = 0.025;
+    var minSeconds = 1.00;
 
     var length = peaks.length;
     var coef = duration / length;
     var minLen = minSeconds / coef;
+
+    console.log( "slice : " + coef );
+    console.log( "min length : " + minLen );
 
     // Gather silence indexes
     var silences = [];
@@ -534,12 +537,30 @@ function extractRegions(peaks, duration) {
     });
 
     // Return time-based regions
-    return fRegions.map(function(reg) {
+    cRegions =  fRegions.map(function(reg) {
         return {
             start: Math.round(reg.start * coef * 10) / 10,
             end: Math.round(reg.end * coef * 10) / 10
         };
     });
+
+    // regions must be continuous
+    rcounter=0;
+    maxLen=0;
+    maxWhen=0;
+    cRegions.forEach(function(creg) {
+       if ( rcounter == 0 ) creg.start = 0.0;
+       if ( rcounter >= 1 ) {
+          cRegions[rcounter-1].end = creg.start-0.1;
+          rlen = cRegions[rcounter-1].end - cRegions[rcounter-1].start;
+          if ( rlen > maxLen ) { maxLen = rlen; maxWhen = cRegions[rcounter-1].start; }
+       }
+       rcounter++;
+    });
+
+    console.log("region max length : " + maxLen + " at : " + toHHMMSS(maxWhen) );
+
+    return cRegions;
 }
 
 /**
@@ -650,7 +671,7 @@ var playRegion = function(regid) {
  * Display annotation.
  */
 function showNote(region) {
-    console.log( "show note");
+    // console.log( "show note");
     if (!showNote.el) {
         showNote.el = document.querySelector('#subtitle');
     }
@@ -672,7 +693,7 @@ function showNote(region) {
  * Delete annotation.
  */
 function deleteNote(region) {
-    console.log( "delete note");
+    // console.log( "delete note");
     if (!deleteNote.el) {
        deleteNote.el = document.querySelector('#subtitle');
     }

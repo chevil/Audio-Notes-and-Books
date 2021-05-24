@@ -42,6 +42,9 @@ if ( !isset($_SESSION['schtroumpf']) || !isset($_SESSION['papa']) )
           alertify.alert("Please, enter a url!");
           return;
        }
+       $('#error-zone').css({background:'lightblue'});
+       $('#error-zone').html("");
+       $('#error-zone').animate({ opacity : 0.0 },{queue:false,duration:1000});
        $('.lds-spinner').css('opacity','1.0');
        $('#create').prop('disabled', true);
        $.get( "create-archive.php", { file : encodeURIComponent(url), user : '<?php echo $_SESSION['schtroumpf']; ?>' }, function(data) {
