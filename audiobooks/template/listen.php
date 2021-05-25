@@ -128,7 +128,7 @@ $(document).ready( function(){
 
   var nbwaves = <?php echo $nbexcerpts ?>;
   var wavesurfer;
-  var wCurrent=0;
+  var wCurrent=-1;
   var wavesurfers = new Array(nbwaves);
 
   for( var w=0; w<nbwaves; w++ )

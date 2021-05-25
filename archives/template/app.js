@@ -233,17 +233,15 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 
     wavesurfer.on('play', function() {
-        $("#play").removeClass('fa-play');
-        $("#play").addClass('fa-pause');
         $("#fplay").removeClass('fa-play');
         $("#fplay").addClass('fa-pause');
+        $("#fplay").attr('data-action','pause');
     });
 
     wavesurfer.on('pause', function() {
-        $("#play").removeClass('fa-pause');
-        $("#play").addClass('fa-play');
         $("#fplay").removeClass('fa-pause');
         $("#fplay").addClass('fa-play');
+        $("#fplay").attr('data-action','play-region');
     });
 
     wavesurfer.responsive=true;
@@ -473,8 +471,13 @@ function saveRegions() {
             if ( region.data != undefined && region.data.note != undefined ) {
                wnote = region.data.note.replaceAll("<div>","").replaceAll("</div>","");
             }
-            var ncontent = "<textarea id='"+region.id+"' class='note-textarea' disabled>"+wnote+"</textarea>";
+            var ncontent = "<textarea id='"+region.id+"' class='note-textarea'>"+wnote+"</textarea>";
             $("#linear-notes").append(ncontent);
+            $("#"+region.id).on( 'change', function(evt) {
+                var id = $(this).attr('id');
+                wavesurfer.regions.list[id].data.note=evt.target.value;
+                saveRegions();
+            });
             return {
                 order: counter,
                 start: region.start,
@@ -563,7 +566,7 @@ function editAnnotation(region, e) {
     e.stopPropagation();
     console.log( "edit : play region" );
     currentRegion=region;
-    currentRegion.playLoop();
+    // currentRegion.playLoop();
     currentRegion.setLoop(true);
     var form = document.forms.edit;
     form.dataset.region = currentRegion.id;
@@ -598,7 +601,7 @@ function editAnnotation(region, e) {
            currentRegion.un("out");
            currentRegion = null;
         }
-        wavesurfer.play();
+        // wavesurfer.play();
     });
 }
 

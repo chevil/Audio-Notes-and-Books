@@ -605,7 +605,6 @@ var sorta = function( notea, noteb ) {
 var addToBook = function(regid) {
     $("#modal-book").modal("show");
     addbook.onsubmit = function(e) {
-       var form = document.forms.edit;
        var regionId = regid;
        var order = -1;
        var counter = 0;
@@ -614,6 +613,7 @@ var addToBook = function(regid) {
           ++counter;
           if ( regionId === id ) order=counter+4096;
        });
+       console.log( "adding note #" + order );
        var oldbook = $('#oldbook').val();
        var newbook = $('#newbook').val();
        if ( newbook === '' && oldbook === 'none' )
@@ -621,7 +621,7 @@ var addToBook = function(regid) {
           alertify.alert( "Please, choose an existing book or create a new one!" );
           return;
        }
-       $('.lds-spinner').css('display','block');
+       $('#lds-spinner-modal').css('display','block');
        var jqxhr = $.post( {
           url: '../../add-to-book.php',
           data: {
@@ -634,10 +634,10 @@ var addToBook = function(regid) {
           dataType: 'application/json'
        }, function() {
           console.log( "add to book succeeded" );
-          $('.lds-spinner').css('display','none');
+          $('#lds-spinner-modal').css('display','none');
           $("#modal-book").modal("hide");
        }).fail(function(error) {
-          $('.lds-spinner').css('display','none');
+          $('#lds-spinner-modal').css('display','none');
           $("#modal-book").modal("hide");
           if ( error.status === 200 ) {
              console.log( "add to book success");

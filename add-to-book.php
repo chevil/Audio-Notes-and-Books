@@ -55,6 +55,7 @@ include("config.php");
         $source = $annrow[1];
         $start = $annrow[2];
         $end = $annrow[3];
+        error_log( "extracting : ".$start." -- ".$end );
      }
      $border = 0;
      $sqlo = "SELECT MAX(norder) FROM audiobook WHERE title='".addslashes($book)."';";

@@ -5,6 +5,10 @@ var GLOBAL_ACTIONS = {
         wavesurfer.playPause();
     },
 
+    'play-region': function() {
+        currentRegion.playLoop();
+    },
+
     pause: function() {
         wavesurfer.pause();
     },
