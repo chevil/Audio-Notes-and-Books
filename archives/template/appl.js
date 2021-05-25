@@ -419,7 +419,7 @@ document.addEventListener('DOMContentLoaded', function() {
  */
 function saveRegions() {
     var counter=4096;
-    localStorage.regions = JSON.stringify(
+    localStorage.regionsl = JSON.stringify(
         Object.keys(wavesurfer.regions.list).map(function(id) {
             var region = wavesurfer.regions.list[id];
             var burl = document.location.href;
@@ -447,7 +447,7 @@ function saveRegions() {
     );
     console.log( "saving : " + (counter-4096) + " linear annotations" );
 
-    anotes = JSON.parse(localStorage.regions);
+    anotes = JSON.parse(localStorage.regionsl);
     var jqxhr = $.post( {
       url: 'save-annotations-linear.php',
       data: {
@@ -471,7 +471,7 @@ function saveRegions() {
  * Load regions from ajax request.
  */
 function loadRegions(regions) {
-    localStorage.regions = regions;
+    localStorage.regionsl = regions;
     // saveRegions();
 }
 
@@ -480,7 +480,7 @@ function loadRegions(regions) {
  */
 function extractRegions(peaks, duration) {
     // Silence params
-    var minValue = 0.025;
+    var minValue = 0.05;
     var minSeconds = 1.00;
 
     var length = peaks.length;
@@ -708,7 +708,7 @@ var playAt = function(position) {
 }
 
 var exportSRT = function() {
-    anotes = JSON.parse(localStorage.regions);
+    anotes = JSON.parse(localStorage.regionsl);
     anotes = anotes.sort(sorta);
     if ( anotes.length === 0 )
     {

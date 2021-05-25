@@ -7,6 +7,7 @@ var wspeed=1.0;
 var evid;
 var svid;
 var currentRegion;
+var bRegionId=-1;
 var soundfile = '__file_url__';
 
 var strstr = function (haystack, needle) {
@@ -116,6 +117,12 @@ var moveSpeech = function() {
     $(".speech").css('margin-left', (curx-40)+'px' );
     $(".play-time").html( toHHMMSS(wavesurfer.getCurrentTime()) + " / " + toHHMMSS(wavesurfer.getDuration()) );
 }
+
+var addToBook = function(regid) {
+    bRegionId = regid;
+    $("#modal-book").modal("show");
+}
+
 
 /**
  * Init & load.
@@ -311,95 +318,96 @@ document.addEventListener('DOMContentLoaded', function() {
         $("#modal-help").modal("show");
     });
 
+    $("#modal-book").on("hidden.bs.modal", function() {
+        console.log( "modal book hide" );
+        // stop playing in a loop
+        if ( currentRegion != null ) {
+           console.log( "hide books : stopping loop");
+           currentRegion.setLoop(false);
+           currentRegion.un("out");
+           currentRegion = null;
+        }
+        wavesurfer.play();
+    });
+
+    $("#modal-book").on("shown.bs.modal", function() {
+        var jqxhr = $.post( {
+           url: '../../get-audiobooks.php',
+        }, function(data) {
+           console.log( "got audiobooks : " + JSON.stringify(data));
+           var books = JSON.parse(data);
+           $('#oldbook option').each(function() {
+              $(this).remove();
+           });
+           $('#oldbook').append($('<option>', {
+              value: 'none',
+              text: 'none'
+           }));
+           $('#oldbook').val('none').trigger('chosen:updated'); //refreshes the drop down list
+           $.each(books, function (id, book) {
+              $('#oldbook').append($('<option>', {
+                 value: decodeURI(book),
+                 text: decodeURI(book)
+              }));
+           });
+        })
+        .fail(function(error) {
+           console.log( "getting audiobooks failed : " + JSON.stringify(error));
+        });
+    });
+
+    addbook.onsubmit = function(e) {
+        var regionId = bRegionId;
+        var order = -1;
+        var counter = 0;
+        e.preventDefault();
+        Object.keys(wavesurfer.regions.list).map(function(id) {
+           ++counter;
+           if ( regionId === id ) order=counter;
+        });
+        var oldbook = $('#oldbook').val();
+        var newbook = $('#newbook').val();
+        if ( newbook === '' && oldbook === 'none' )
+        {
+           alertify.alert( "Please, choose an existing book or create a new one!" );
+           return;
+        }
+        $('.lds-spinner').css('display','block');
+        var jqxhr = $.post( {
+           url: '../../add-to-book.php',
+           data: {
+             oldbook: fullEncode(oldbook),
+             newbook: fullEncode(newbook),
+             order: order,
+             user: user,
+             source: fullEncode(soundfile),
+           },
+           dataType: 'application/json'
+        }, function() {
+           console.log( "add to book succeeded" );
+           $('.lds-spinner').css('display','none');
+           $("#modal-book").modal("hide");
+        })
+        .fail(function(error) {
+           $('.lds-spinner').css('display','none');
+           $("#modal-book").modal("hide");
+           if ( error.status === 200 ) {
+              console.log( "add to book success");
+           } else {
+              console.log( "adding to book failed : " + JSON.stringify(error));
+              alertify.alert( "Adding to book failed : " + error.statusText );
+           }
+        });
+    };
+
     $('#audiobook').on('click', function() {
        var form = document.forms.edit;
+       bRegionId = form.dataset.region;
        // console.log( "audio book click : pause" );
        // wavesurfer.pause();
        $("#modal-form").off("hidden.bs.modal");
        $("#modal-form").modal("hide");
        $("#modal-book").modal("show");
-       $("#modal-book").on("hidden.bs.modal", function() {
-           console.log( "modal book hide" );
-           // stop playing in a loop
-           if ( currentRegion != null ) {
-              console.log( "hide books : stopping loop");
-              currentRegion.setLoop(false);
-              currentRegion.un("out");
-              currentRegion = null;
-           }
-           wavesurfer.play();
-       });
-
-       $("#modal-book").on("shown.bs.modal", function() {
-           var jqxhr = $.post( {
-             url: '../../get-audiobooks.php',
-           }, function(data) {
-              console.log( "got audiobooks : " + JSON.stringify(data));
-              var books = JSON.parse(data);
-              $('#oldbook option').each(function() {
-                 $(this).remove();
-              });
-              $('#oldbook').append($('<option>', {
-                 value: 'none',
-                 text: 'none'
-              }));
-              $('#oldbook').val('none').trigger('chosen:updated'); //refreshes the drop down list
-              $.each(books, function (id, book) {
-                 $('#oldbook').append($('<option>', {
-                   value: decodeURI(book),
-                   text: decodeURI(book)
-                 }));
-              });
-           })
-           .fail(function(error) {
-              console.log( "getting audiobooks failed : " + JSON.stringify(error));
-           });
-       });
-
-       addbook.onsubmit = function(e) {
-           var form = document.forms.edit;
-           var regionId = form.dataset.region;
-           var order = -1;
-           var counter = 0;
-           e.preventDefault();
-           Object.keys(wavesurfer.regions.list).map(function(id) {
-              ++counter;
-              if ( regionId === id ) order=counter;
-           });
-           var oldbook = $('#oldbook').val();
-           var newbook = $('#newbook').val();
-           if ( newbook === '' && oldbook === 'none' )
-           {
-              alertify.alert( "Please, choose an existing book or create a new one!" );
-              return;
-           }
-           $('.lds-spinner').css('display','block');
-           var jqxhr = $.post( {
-              url: '../../add-to-book.php',
-              data: {
-                oldbook: fullEncode(oldbook),
-                newbook: fullEncode(newbook),
-                order: order,
-                user: user,
-                source: fullEncode(soundfile),
-              },
-              dataType: 'application/json'
-           }, function() {
-              console.log( "add to book succeeded" );
-              $('.lds-spinner').css('display','none');
-              $("#modal-book").modal("hide");
-           })
-           .fail(function(error) {
-               $('.lds-spinner').css('display','none');
-               $("#modal-book").modal("hide");
-               if ( error.status === 200 ) {
-                  console.log( "add to book success");
-               } else {
-                  console.log( "adding to book failed : " + JSON.stringify(error));
-                  alertify.alert( "Adding to book failed : " + error.statusText );
-               }
-           });
-       };
     });
 
     $('#help').on('click', function() {
@@ -453,12 +461,14 @@ function saveRegions() {
             if ( typeof region.data.note != "undefined" )
                leyenda = region.data.note.replaceAll("<div>","").replaceAll("</div>","").substring(0,20)+"...";
             navigation+="<a href='javascript: playAt("+region.start+")'>"+counter+" - "+leyenda+"<br/></a>";
-            var blank = "<br/><br/>";
+            var blank = "<br/><br/><div class='linear-bar' id='bar-"+region.id+"'>";
             $("#linear-notes").append(blank);
-            var range = "<p>"+toHHMMSS(region.start)+" - "+toHHMMSS(region.end)+" : </p>";
-            $("#linear-notes").append(range);
+            var range = "<p>"+toHHMMSS(region.start)+" - "+toHHMMSS(region.end)+" (" + Math.round(region.end-region.start) + " s) : </p>";
+            $("#bar-"+region.id).append(range);
             var rplay = "<i class='fa fa-play fa-1x linear-play' id='r"+region.id+"' onclick='playRegion(\""+region.id+"\")'></i>";
-            $("#linear-notes").append(rplay);
+            $("#bar-"+region.id).append(rplay);
+            var rbook = "<i class='fa fa-book fa-1x linear-book' id='b"+region.id+"' onclick='addToBook(\""+region.id+"\")'></i>";
+            $("#bar-"+region.id).append(rbook);
             var wnote = '';
             if ( region.data != undefined && region.data.note != undefined ) {
                wnote = region.data.note.replaceAll("<div>","").replaceAll("</div>","");
