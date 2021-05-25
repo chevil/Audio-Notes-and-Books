@@ -33,14 +33,22 @@ else
 
 $acolor="rgba(".rand(0,255).",".rand(0,255).",".rand(0,255).",0.1)";
 
-$insres=db_query( "INSERT INTO user ( user, password, color ) VALUES ('".addslashes($user)."','".addslashes($password)."', '".$acolor."' )" );
-if ( $insres == '1')
+$userres=db_query( "SELECT user FROM user  WHERE user='".addslashes($user)."'" );
+if ( mysqli_num_rows($userres) > 0 )
 {
-   echo "OK";
+   echo "ERR: This user already exists.";
 }
 else
 {
-   echo "ERR: Insert Error";
+   $insres=db_query( "INSERT INTO user ( user, password, color ) VALUES ('".addslashes($user)."','".addslashes($password)."', '".$acolor."' )" );
+   if ( $insres == '1')
+   {
+      echo "OK";
+   }
+   else
+   {
+      echo "ERR: Insert Error";
+   }
 }
 
 ?>
