@@ -54,8 +54,7 @@ while ( $rowsetting = mysqli_fetch_array( $ressettings) )
         <script type="text/javascript" src="../../js/wavesurfer.min.js"></script>
         <script type="text/javascript" src="../../js/wavesurfer.regions.min.js"></script>
 
-        <!-- no global actions -->
-        <!-- <script type="text/javascript" src="../../js/trivia.js"></script> -->
+        <script type="text/javascript" src="../../js/trivia.js"></script>
         <script type="text/javascript" src="../../js/alertify.min.js"></script>
         <script type="text/javascript" src="../../js/circular-json.js"></script>
         <script type="text/javascript" src="https://cdn.tiny.cloud/1/fsisf6nug1vh20mrqte7djkhpu0j1umti1udbihiykd71g9w/tinymce/5/tinymce.min.js" referrerpolicy="origin"></script>
