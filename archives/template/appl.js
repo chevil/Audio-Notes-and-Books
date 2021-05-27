@@ -126,9 +126,9 @@ document.addEventListener('DOMContentLoaded', function() {
 
     $(document).scroll(function() {
        if ( $(document).scrollTop() <= wavey ) 
-          $("wave").css({top:''});
+          $("#waveform").css({top:''});
        else
-          $("wave").css({top:$(document).scrollTop()-2*wavey});
+          $("#waveform").css({top:$(document).scrollTop()-wavey});
     });
 
     var jqxhr = $.post( {
@@ -202,12 +202,11 @@ document.addEventListener('DOMContentLoaded', function() {
         /* Regions */
         wavesurfer.on('ready', function() {
 
-            console.log("there are : " + document.getElementsByTagName("wave").length + " wave(s)");
-            var wposition = getPosition( document.getElementsByTagName("wave")[1] );
-            console.log("wave is at : (" + wposition.x + "," + wposition.x + ")");
+            var wposition = getPosition( document.getElementById("waveform") );
+            console.log("waveform is at : (" + wposition.x + "," + wposition.x + ")");
             wavey = wposition.y;
             // this function doesn't work
-            wavey = 50;
+            wavey = 100;
 
             $('.lds-spinner').css('display','none');
             if ( !gotPeaks )
