@@ -13,6 +13,7 @@ var peaks;
 var regions;
 var evid;
 var svid;
+var wavey=-1;
 var currentRegion;
 var soundfile = '__file_url__';
 
@@ -123,6 +124,13 @@ document.addEventListener('DOMContentLoaded', function() {
     mapProgressColor = $("#mapprogresscolor").html();
     mapWaveColor = $("#mapwavecolor").html();
 
+    $(document).scroll(function() {
+       if ( $(document).scrollTop() <= wavey ) 
+          $("wave").css({top:''});
+       else
+          $("wave").css({top:$(document).scrollTop()-2*wavey});
+    });
+
     var jqxhr = $.post( {
         responseType: 'json',
         url: 'peaks.json'
@@ -193,6 +201,13 @@ document.addEventListener('DOMContentLoaded', function() {
 
         /* Regions */
         wavesurfer.on('ready', function() {
+
+            console.log("there are : " + document.getElementsByTagName("wave").length + " wave(s)");
+            var wposition = getPosition( document.getElementsByTagName("wave")[1] );
+            console.log("wave is at : (" + wposition.x + "," + wposition.x + ")");
+            wavey = wposition.y;
+            // this function doesn't work
+            wavey = 50;
 
             $('.lds-spinner').css('display','none');
             if ( !gotPeaks )
