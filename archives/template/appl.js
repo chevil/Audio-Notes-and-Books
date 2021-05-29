@@ -91,14 +91,21 @@ var getPosition = function(e)
 }
 
 var decZoom = function() {
-    wzoom=Math.max(wzoom-1,1);
-    $('#zvalue').html("x"+(wzoom));
+    if ( wzoom <= 1.0 )
+       wzoom=Math.max(wzoom-0.1,0.1);
+    else
+       wzoom=Math.max(wzoom-1,1);
+    console.log( "wzoom = " + wzoom );
+    $('#zvalue').html(("x"+wzoom).substring(0,4));
     evid = setTimeout( "decZoom();", 500 );
 }
 
 var incZoom = function() {
-    wzoom=Math.min(wzoom+1,198);
-    $('#zvalue').html("x"+(wzoom));
+    if ( wzoom < 1 )
+       wzoom=Math.min(wzoom+0.1,1.0);
+    else
+       wzoom=Math.min(wzoom+1,100);
+    $('#zvalue').html(("x"+wzoom).substring(0,4));
     evid = setTimeout( "incZoom();", 500 );
 }
 
@@ -307,7 +314,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 // zoom is proportional to the number of minutes limited to 10
                 wzoom = Math.floor( wavesurfer.getDuration() / 60.0 )+1;
                 if ( wzoom > 10 ) wzoom = 10;
-                $('#zvalue').html("x"+(wzoom));
+                $('#zvalue').html(("x"+wzoom).substring(0,4));
                 setTimeout( "wavesurfer.zoom(wzoom);", 5000 );
                 $('#svalue').html(("x"+wspeed).substring(0,4));
 
