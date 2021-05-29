@@ -97,7 +97,7 @@ while ( $rowsetting = mysqli_fetch_array( $ressettings) )
                     </div>
                 </div>
 		<div class="upper-toolbar">
-                    <div id="zlabel" class="zoom-label">Pxs/s</div>
+                    <div id="zlabel" class="zoom-label">Px/s</div>
                     <div id="slabel" class="speed-label">Speed</div>
                 </div>
 		<div class="lower-toolbar">
