@@ -25,7 +25,7 @@ var strstr = function (haystack, needle) {
       return i;
     }
   }
-  return -1;
+  return 0;
 };
 
 var fullEncode = function(w)
@@ -92,7 +92,7 @@ var getPosition = function(e)
 
 var decZoom = function() {
     if ( wzoom <= 1.0 )
-       wzoom=Math.max(wzoom-0.1,0.1);
+       wzoom=Math.max(wzoom-0.2,0.1);
     else
        wzoom=Math.max(wzoom-1,1);
     console.log( "wzoom = " + wzoom );
@@ -699,12 +699,17 @@ function showNote(region) {
     var snote = '';
     var lines = region.data.note.split("\n");
     lines.forEach( function( line, index ) {
-        if ( strstr( line, ":" ) > 0 ) {
+        // console.log(line.substring(2,3) + " " + line);
+        if ( line.substring(2,3) ==  ":" ) {
            if ( language === '--' || language === line.substring(0,2) ) {
-              snote += line.substring(3)+"<br/>";
+              snote += line.substring(3);
            } 
         } else {
-           snote += line+"<br/>";
+           snote += line;
+        }
+        // check if it's html or normal text
+        if ( !strstr( line, "<" ) && !strstr( line, ">" ) ) {
+           snote += "<br/>";
         }
     });
     showNote.el.innerHTML = snote;

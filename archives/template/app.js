@@ -18,7 +18,7 @@ var strstr = function (haystack, needle) {
       return i;
     }
   }
-  return -1;
+  return 0;
 };
 
 var fullEncode = function(w)
@@ -623,7 +623,25 @@ function showNote(region) {
         showNote.speaker = document.querySelector('#ispeaker');
         showNote.sfull = document.querySelector('#sfull');
     }
-    showNote.el.innerHTML = region.data.note || '';
+    var snote = '';
+    if ( region.data && region.data.note ) {
+       var lines = region.data.note.split("\n");
+       lines.forEach( function( line, index ) {
+          // console.log(line.substring(2,3) + " " + line);
+          if ( line.substring(2,3) ==  ":" ) {
+             if ( language === '--' || language === line.substring(0,2) ) {
+                snote += line.substring(3);
+             }
+          } else {
+             snote += line;
+          }
+          // check if it's html or normal text
+          if ( !strstr( line, "<" ) && !strstr( line, ">" ) ) {
+             snote += "<br/>";
+          }
+       });
+    }
+    showNote.el.innerHTML = snote;
     showNote.speaker.innerHTML = region.data.user || '';
     // showNote.speaker.style.background = region.data.color || '';
     // showNote.sfull.style.background = region.data.color || '';
