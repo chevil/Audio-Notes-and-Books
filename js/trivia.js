@@ -31,8 +31,8 @@ document.addEventListener('DOMContentLoaded', function() {
     document.addEventListener('keydown', function(e) {
         var map = {
             // 32: 'play', // space, no thank you
-            37: 'back', // left
-            39: 'forth' // right
+            // 37: 'back', // left
+            // 39: 'forth' // right
         };
         var action = map[e.keyCode];
         if (action in GLOBAL_ACTIONS) {
