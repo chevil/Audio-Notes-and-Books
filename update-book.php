@@ -37,13 +37,26 @@ else
     $order=$_POST['order'];
 }
 
-$updres=db_query( "UPDATE audiobook SET title='".addslashes($title)."' WHERE title='".addslashes($otitle)."'" );
-if ( $updres != true )
+if ( $title != $otitle )
 {
-   die("ERR: Could not update book.");
+    $updres=db_query( "UPDATE audiobook SET title='".addslashes($title)."' WHERE title='".addslashes($otitle)."'" );
+    if ( $updres != true )
+    {
+       die("ERR: Could not update book.");
+    }
+    error_log("mv \"audiobooks/".urldecode($otitle)."\" \"audiobooks/".urldecode($title))."\"";
+    if ( $result=exec("mv \"audiobooks/".urldecode($otitle)."\" \"audiobooks/".urldecode($title)."\"; echo $?") != 0 )
+    {
+       die("ERR: Cannot move audio book ( too heavy? ".$result.")" );
+    }
+    $cmd = "sed -i \"s#".urldecode($otitle)."#".urldecode($title)."#g\" \"audiobooks/".urldecode($title)."/listen.php\"; echo $?";
+    error_log($cmd);
+    if ( $result=exec($cmd) != 0 )
+    {
+       die("ERR: Cannot move audio book ( too esoteric? ".$result.")" );
+    }
 }
 
-error_log( "DELETE FROM audiobook WHERE norder NOT IN (".$order.")" );
 $delres=db_query( "DELETE FROM audiobook WHERE norder NOT IN (".$order.") AND title='".addslashes($otitle)."'" );
 if ( $delres != true )
 {

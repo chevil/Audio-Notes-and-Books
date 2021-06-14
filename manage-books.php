@@ -3,13 +3,13 @@ include("config.php");
 include("functions.php");
 
 
-if ( $_SERVER[SERVER_PORT] == 80 )
+if ( $_SERVER['SERVER_PORT'] == 80 )
 {
-   $servroot = "https://$_SERVER[HTTP_HOST]";
+   $servroot = "https://".$_SERVER['HTTP_HOST'];
 }
 else
 {
-   $servroot = "https://$_SERVER[HTTP_HOST]:$_SERVER[SERVER_PORT]";
+   $servroot = "https://".$_SERVER['HTTP_HOST'].":".$_SERVER['SERVER_PORT'];
 }
 
 session_start();

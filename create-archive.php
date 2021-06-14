@@ -11,15 +11,15 @@ if ( !isset($_SESSION['schtroumpf']) || !isset($_SESSION['papa']) )
     exit();
 }
 
-if ( $_SERVER[SERVER_PORT] == 80 )
+if ( $_SERVER['SERVER_PORT'] == 80 )
 {
-   $servroot = "https://$_SERVER[HTTP_HOST]";
+   $servroot = "https://".$_SERVER['HTTP_HOST'];
 }
 else
 {
-   $servroot = "https://$_SERVER[HTTP_HOST]:$_SERVER[SERVER_PORT]";
+   $servroot = "https://".$_SERVER['HTTP_HOST'].":".$_SERVER['SERVER_PORT'];
 }
-  
+
 if ( empty($_GET['file']) )
 {
    print "ERR: File is not set";
