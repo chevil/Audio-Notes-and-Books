@@ -23,15 +23,16 @@ if ( $_FILES['file']['error'] != UPLOAD_ERR_OK )
     exit(-1);
 }
 
-if ( !isset($_POST['title']) || $_POST['title'] == "" )
+if ( !isset($_POST['url']) || $_POST['url'] == "" )
 {
    header("HTTP/1.1 500 Internal Server Error");
    print("Unknown archive.");
    exit(-1);
 }
-$title = $_POST['title'];
+$url = $_POST['url'];
 
-$query="SELECT id FROM archive WHERE title='".addslashes($title)."'";
+$query="SELECT id FROM archive WHERE url='".htmlentities($url)."'";
+error_log("Uploading document : ".$query );
 $resan = db_query($query);
 if ( mysqli_num_rows($resan) != 1 )
 {

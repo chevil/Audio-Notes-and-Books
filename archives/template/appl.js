@@ -126,6 +126,21 @@ var incSpeed = function() {
  */
 document.addEventListener('DOMContentLoaded', function() {
 
+    var jqxhr = $.post( {
+       url: '../../get-title.php',
+       data: {
+          url: encodeURIComponent(soundfile),
+       },
+       dataType: "text/html"
+    }).fail(function(data) {
+       if ( data.status === 200 ) {
+         $("#title").html(data.responseText);
+       } else {
+          console.log("getting title failed : " + JSON.stringify(data));
+          // alertify.alert("getting biography failed : " + JSON.stringify(data));
+       }
+    });
+
     progressColor = $("#progresscolor").html();
     waveColor = $("#wavecolor").html();
     mapProgressColor = $("#mapprogresscolor").html();

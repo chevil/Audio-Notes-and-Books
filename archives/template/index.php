@@ -14,7 +14,7 @@ if ( !isset($_SESSION['schtroumpf']) || !isset($_SESSION['papa']) )
 <html>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-        <title>__title__</title>
+        <title></title>
 
         <link rel="stylesheet" href="../../css/bootstrap.min.css">
         <link rel="stylesheet" href="../../css/style.css" />
@@ -80,7 +80,7 @@ if ( !isset($_SESSION['schtroumpf']) || !isset($_SESSION['papa']) )
                         <center><b>Upload Documents</b></center>
                         <div class="modal-content modal-ucontent">
                            <form id="upload-zone" class="dropzone">
-                              <input name="title" type="hidden" value="__title__"/>
+                              <input name="url" id="formurl" type="hidden" value=""/>
                            </form>
                         </div>
                     </div>
@@ -91,6 +91,8 @@ if ( !isset($_SESSION['schtroumpf']) || !isset($_SESSION['papa']) )
     </body>
 
 <script type="text/javascript">
+
+var soundfile = '__file_url__';
 
 var openTab = function(name) {
   $(".tabcontent").css("display","none");
@@ -152,10 +154,11 @@ var HRSize = function(bytes, si=false, dp=1) {
 }
 
 var getUploads = function() {
+    console.log("soundfile :" + soundfile);
     var jqxhr = $.post( {
        url: '../../get-uploads.php',
        data: {
-          title: $(document).attr('title'),
+          url: encodeURIComponent(soundfile),
        },
        dataType: "application/json" 
     }, function(data) {
@@ -207,10 +210,27 @@ var deleteUpload = function(uri) {
 
 $(document).ready( function(){
 
+    $("#formurl").val(encodeURIComponent(soundfile));
+
+    var jqxhr = $.post( {
+       url: '../../get-title.php',
+       data: {
+          url: encodeURIComponent(soundfile),
+       },
+       dataType: "text/html" 
+    }).fail(function(data) {
+       if ( data.status === 200 ) {
+          $(document).attr('title',data.responseText);
+       } else {
+          console.log("getting title failed : " + JSON.stringify(data));
+          alertify.alert("getting title failed : " + JSON.stringify(data));
+       }
+    });
+
     var jqxhr = $.post( {
        url: '../../get-biography.php',
        data: {
-          title: $(document).attr('title'),
+          url: encodeURIComponent(soundfile),
        },
        dataType: "text/html" 
     }).fail(function(data) {
@@ -260,7 +280,6 @@ $(document).ready( function(){
               help: { title: 'Help', items: 'help' }
             }
           });
-
        } else {
           console.log("getting biography failed : " + JSON.stringify(data));
           alertify.alert("getting biography failed : " + JSON.stringify(data));
@@ -270,7 +289,7 @@ $(document).ready( function(){
     var jqxhr = $.post( {
        url: '../../get-description.php',
        data: {
-          title: $(document).attr('title'),
+          url: encodeURIComponent(soundfile),
        },
        dataType: "text/html" 
     }).fail(function(data) {

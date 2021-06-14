@@ -16,16 +16,16 @@ if (!$link) {
    exit(-1);
 } else {
    $link->query('SET NAMES utf8');
-   $sqls = "SELECT description FROM archive WHERE url LIKE '%".addslashes($url)."';";
-   // error_log( 'Getting description : '.$sqls );
+   $sqls = "SELECT title, date FROM archive WHERE url LIKE '%".addslashes($url)."';";
+   error_log( 'Getting title : '.$sqls );
    $results = $link->query($sqls);
    if ( mysqli_num_rows($results) != 1 ) {
-      header('HTTP/1.1 500 Error getting description : '.mysqli_num_rows($results));	  
+      header('HTTP/1.1 500 Error getting title : '.mysqli_num_rows($results));	  
       mysqli_close($link);
       exit(-1);
    } else {
       $row = mysqli_fetch_array($results);
-      echo $row['description'];
+      echo $row['title']." (".$row['date'].")";
       mysqli_close($link);
    }
 }

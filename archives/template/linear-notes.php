@@ -37,7 +37,7 @@ while ( $rowsetting = mysqli_fetch_array( $ressettings) )
 <html>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-        <title>__title__</title>
+        <title></title>
 
         <!-- Bootstrap -->
         <link rel="stylesheet" href="../../css/bootstrap.min.css">
@@ -84,7 +84,7 @@ while ( $rowsetting = mysqli_fetch_array( $ressettings) )
 
         <div class="container">
             <div class="header">
-                <h3 itemprop="title" id="title">Title : __title__ (__date__)</h3>
+                <h3 itemprop="title" id="title"></h3>
                 <i id="help" class="fa fa-question-circle fa-2x" aria-hidden="true" ></i>
             </div>
 
