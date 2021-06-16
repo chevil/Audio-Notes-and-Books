@@ -41,15 +41,6 @@ else
 <html>
 <head>
   <meta charset="UTF-8">
-  <style type="text/css">
-      #map-canvas { height: 300px; width : 100% }
-      #error-zone { height: 50px; width : 100%; text-align: center;
-                    line-height: 50px; vertical-align:middle; opacity : 0;
-                    -moz-border-radius: 15px; border-radius: 15px; background : lightblue }
-      .bluebutton { height: 30px; width : 100px; text-align: center;
-                   line-height: 30px; vertical-align:middle; opacity : 1;
-                   -moz-border-radius: 10px; border-radius: 10px; background : lightblue }
-  </style>
 
   <script src="js/jquery.min.js"></script>
   <script src="js/jquery.datetimepicker.js"></script>
@@ -59,6 +50,7 @@ else
   <link href="css/alertify.default.css" rel="stylesheet">
   <link href="css/jquery.datetimepicker.css" rel="stylesheet"/>
   <link href="css/font-awesome.min.css" rel="stylesheet">
+  <link href="css/all.css" rel="stylesheet">
 
   <script type="text/javascript">
 

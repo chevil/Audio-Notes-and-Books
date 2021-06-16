@@ -36,20 +36,12 @@ while ( $rowsetting = mysqli_fetch_array( $ressettings) )
 <html>
 <head>
   <meta charset="UTF-8">
-  <style type="text/css">
-      #map-canvas { height: 300px; width : 100% }
-      #error-zone { height: 50px; width : 100%; text-align: center;
-                    line-height: 50px; vertical-align:middle; opacity : 0;
-                    -moz-border-radius: 15px; border-radius: 15px; background : lightblue }
-      .bluebutton { height: 30px; width : 100px; text-align: center;
-                   line-height: 30px; vertical-align:middle; opacity : 1;
-                   -moz-border-radius: 10px; border-radius: 10px; background : lightblue }
-  </style>
-
   <script src="js/jquery.min.js"></script>
   <script src="js/alertify.min.js"></script>
   <script src="js/jscolor.min.js"></script>
 
+  <link href="css/bootstrap.min.css" rel="stylesheet">
+  <link href="css/app.css" rel="stylesheet">
   <link href="css/alertify.core.css" rel="stylesheet">
   <link href="css/alertify.default.css" rel="stylesheet">
   <link href="css/font-awesome.min.css" rel="stylesheet">
@@ -85,11 +77,11 @@ while ( $rowsetting = mysqli_fetch_array( $ressettings) )
 </head>
 
 <body background="img/background.png">
-<a href="./index.php"><i class="fa fa-chevron-left fa-1x" aria-hidden="true" style="color: #000000; float:left; margin-left:20px;" ></i></a>
+<a href="./index.php"><i class="fa fa-home fa-2x" aria-hidden="true" style="color: #999; float:left; margin-left:20px; margin-top:28px;" ></i></a>
 
-<center><table width=40%>
+<center><table width=90%>
 <tr><td align=right>
-</td><td valign=center>
+</td><td align=center>
 <h1><?php echo $config['project-name']; ?></h1>
 </td</tr>
 </table></center>

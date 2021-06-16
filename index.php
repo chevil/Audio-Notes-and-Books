@@ -8,21 +8,13 @@ session_start();
 <html>
 <head>
   <meta charset="UTF-8">
-  <style type="text/css">
-      .bluebutton { height: 30px; width : 200px; text-align: center;
-                   line-height: 30px; vertical-align:middle; opacity : 1;
-                   -moz-border-radius: 10px; border-radius: 10px; background : lightblue }
-      .databutton { height: 30px; width : 200px; text-align: center;
-                   line-height: 30px; vertical-align:middle; opacity : 1;
-                   -moz-border-radius: 10px; border-radius: 10px; background : lightgreen }
-      .stable { -moz-border-radius: 10px; border-radius: 10px; background : lightgrey }
-  </style>
-
   <script src="js/jquery.min.js"></script>
   <script src="js/alertify.min.js"></script>
+  <link href="css/bootstrap.min.css" rel="stylesheet">
   <link href="css/alertify.core.css" rel="stylesheet">
   <link href="css/alertify.default.css" rel="stylesheet">
   <link href="css/app.css" rel="stylesheet">
+  <link href="css/all.css" rel="stylesheet">
 
   <script type="text/javascript">
 
@@ -120,9 +112,9 @@ session_start();
 </head>
 
 <body background="img/background.png">
-<center><table width=40%>
+<center><table width=90%>
 <tr><td align=right>
-</td><td valign=center>
+</td><td align=center>
 <h1><?php echo $config['project-name']; ?></h1>
 </td</tr>
 </table></center>

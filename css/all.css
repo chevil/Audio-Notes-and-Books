@@ -1,0 +1,25 @@
+body, html {
+  font-family: helvetica, sans-serif;
+}
+
+#error-zone { height: 50px; width : 500px; text-align: center; margin-top: 20px;
+              line-height: 50px; vertical-align:middle; opacity : 0;
+              -moz-border-radius: 15px; border-radius: 15px; background : lightblue }
+
+.bluebutton { height: 40px; width : 200px; text-align: center;
+              line-height: 30px; vertical-align:middle; opacity : 1;
+              -moz-border-radius: 30px; border-radius: 30px; color:#333; background : #fff; border-color: #333; }
+
+.databutton { height: 30px; width : 400px; text-align: center;
+              line-height: 30px; vertical-align:middle; opacity : 1;
+             -moz-border-radius: 10px; border-radius: 10px; background : lightgrey }
+
+.stable { -moz-border-radius: 10px; border-radius: 10px; background : lightgrey }
+
+.pages { float: left; margin-left: 10%; width: 80%; overflow-wrap: break-word; }
+
+.search { float: left; margin-left: 20%;}
+
+.add { float: right; margin-right: 10%; width: 10%; }
+
+.license { float: left; margin-left: 10%;}
